@@ -141,3 +141,13 @@ def setupC():
     print("resultados...")
     for n in range(len(matrix)):
         print(matrix[n].titulo+"..."+str(matrix[n].corpo))
+
+if __name__ == "__main__":
+    ch = int(input('''Aperte....\n > 1 para carregar matrix. \n > 2 para criar nova matrix do zero.\n '''))
+    if ch == 1:
+        try:
+            matrix = loadMatrix()
+        except:
+            print("erro no carregamento da matrix.")
+    else:
+        matrix = []
