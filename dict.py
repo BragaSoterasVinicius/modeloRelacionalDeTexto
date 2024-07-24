@@ -29,11 +29,25 @@ class coluna:
         self.id = 0
         self.titulo = titulo
         self.corpo = []
-    #o titulo vai com a palavra de referencia da coluna e o corpo com quantas vezes
-    #essa palavra titulo aparece com outra que tenha um index igual ao index da palavra
-    #titulo + o index desta palavra no corpo da coluna.
+        #o titulo vai com a palavra de referencia da coluna e o corpo com quantas vezes
+        #essa palavra titulo aparece com outra que tenha um index igual ao index da palavra
+        #titulo + o index desta palavra no corpo da coluna.]
+        
+    def setCorpo(self, pos, value):
+        if len(self.corpo) == 0:
+            self.corpo.append(0)
+        if len(self.corpo)-1 < pos:
+            for n in range(self.corpo[len(self.corpo)-1],pos):
+                self.corpo.append(0)
+            self.corpo.append(value)
+        else:
+            self.corpo[pos] = value
 
-
+    def getCorpo(self, pos):
+        if len(self.corpo)-1 < pos:
+            self.setCorpo(pos, 0)
+        return self.corpo[pos]
+        
 def add_coluna(matrix, palavraTitulo):
     colunaNova = coluna(palavraTitulo)
     colunaNova.id = len(matrix)
@@ -62,10 +76,11 @@ def update_value_frequencia_coluna(matrix, dic, mensagemArray, palavra):
         #agora vamos adicionar na coluna um valor mais um para cada aparição de uma palavra
         #assume-se que todas as palavras do mensagemArray já estejam registradas como uma linha
         #no dicionário
-        valor = coluna.corpo[dic_index(dic, n) - dic_index(dic, palavra)-1]
+        valor = coluna.getCorpo(dic_index(dic, n) - dic_index(dic, palavra)-1)
+        #valor = coluna.corpo[dic_index(dic, n) - dic_index(dic, palavra)-1]
         print(dic_index(dic, n))
         print(dic_index(dic, palavra))
-        coluna.corpo[dic_index(dic, n) - dic_index(dic, palavra)-1] = valor+1
+        coluna.setCorpo(dic_index(dic, n) - dic_index(dic, palavra)-1, valor+1)
 
     print("coluna montada")
     print(palavra +"..."+ str(coluna.corpo))
@@ -84,45 +99,21 @@ def add_word_to_dic(dic, word):
 def dic_index(dic, word):
     return dic.index(word)
 
-def setupA():
-    #método pra agilizar testes
-    add_coluna(matrix, "a")
-    add_coluna(matrix, "b")
-    add_coluna(matrix, "c")
-    add_coluna(matrix, "d")
-    arindic = ["a","b","c","d"]
-    matrix[0].corpo = [0,0,0,0]
-    matrix[1].corpo = [0,0,0,0]
-    matrix[2].corpo = [0,0,0,0]
-    matrix[3].corpo = [0,0,0,0]
-    
-    #for n in matrix:
-    #    n.corpo = arrayCorpoGenerico
-    dic = arindic
-    add_value_frequencia(matrix, dic,  "b")
-    
-def setupB():
-    #método pra agilizar testes
-    add_coluna(matrix, "a")
-    add_coluna(matrix, "b")
-    add_coluna(matrix, "c")
-    add_coluna(matrix, "d")
-    arindic = ["a","b","c","d"]
-    matrix[0].corpo = [0,0,0,0]
-    matrix[1].corpo = [0,0,0,0]
-    matrix[2].corpo = [0,0,0,0]
-    matrix[3].corpo = [0,0,0,0]
-    
-    #for n in matrix:
-    #    n.corpo = arrayCorpoGenerico
-    dic = arindic
-    message = split_mensagem("a b c a a")
-    #Interessantemente, está funcionando, o método abaixo, por exemplo, denota em todas
-    #as colunas anteriores quantas vezes b apareceu na mensagem. Aumentando o peso de b
-    #nas colunas anteriores (nesse caso só >a< msm). Idealmente no lugar de b estaremos
-    #colocando cada palavra da mensagem, uma única vez, na mensagem acima, por exemplo
-    #testaríamos a, b, c e d uma única vez.
-    add_value_frequencia(matrix, dic, message, "b")
+#Coisas usáveis tipo factories
+def build_new_palavra(value, matrix, dic):
+    add_word_to_dic(dic, value)
+    add_coluna(matrix, value)
+
+#save and load
+import pickle as p
+def saveMatrix(matrix):
+    with open('matrix.pkl', 'wb') as outp:
+        p.dump(matrix, outp, p.HIGHEST_PROTOCOL)
+        
+def loadMatrix():
+    with open('matrix.pkl', 'rb') as m:
+        matrix = p.load(m)
+        return matrix
     
 def setupC():
     #método pra agilizar testes
@@ -132,15 +123,15 @@ def setupC():
     add_coluna(matrix, "c")
     add_coluna(matrix, "d")
     arindic = ["a","b","c","d"]
-    matrix[0].corpo = [0,0,0,0,0]
+    '''matrix[0].corpo = [0,0,0,0,0]
     matrix[1].corpo = [0,0,0,0,0]
     matrix[2].corpo = [0,0,0,0,0]
-    matrix[3].corpo = [0,0,0,0,0]
+    matrix[3].corpo = [0,0,0,0,0]'''
     
     #for n in matrix:
     #    n.corpo = arrayCorpoGenerico
     dic = arindic
-    message = split_mensagem("a a b b b c c c d")
+    message = split_mensagem("a a a a a a a a a b b b c c c c c d")
     #Eh o que eu escrevi la encima porem concretizada
     for n in palavras_unicas_por_mensagem(message):
         print("HORA DO "+ n)
