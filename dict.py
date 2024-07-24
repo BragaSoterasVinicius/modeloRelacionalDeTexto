@@ -163,7 +163,7 @@ def user_message_to_matrix(message, matrix, dic):
         print("HORA DO "+ n)
         update_value_frequencia_coluna(matrix, dic, messageArray, n)
     
-def pap():
+if __name__ == "__main__":
     ch = int(input('''Aperte....\n > 1 para carregar matrix. \n > 2 para criar nova matrix do zero.\n '''))
     #adicionar código para selecionar matrix disponíveis na pasta
     if ch == 1:
