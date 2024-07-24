@@ -105,6 +105,7 @@ def build_new_palavra(value, matrix, dic):
     add_coluna(matrix, value)
 
 #save and load
+#puxar dicionário junto
 import pickle as p
 def saveMatrix(matrix):
     with open('matrix.pkl', 'wb') as outp:
@@ -114,7 +115,7 @@ def loadMatrix():
     with open('matrix.pkl', 'rb') as m:
         matrix = p.load(m)
         return matrix
-    
+
 def setupC():
     #método pra agilizar testes
     matrix = []
@@ -142,12 +143,44 @@ def setupC():
     for n in range(len(matrix)):
         print(matrix[n].titulo+"..."+str(matrix[n].corpo))
 
-if __name__ == "__main__":
+def setup(matrix, dic, n):
+    if is_word_in_dic(dic, n) == False:
+        print("nova palavra sendo adicionada! " + n)
+        add_word_to_dic(dic, n)
+        #Talvez no futuro devesse unir essas duas condicionais em uma coisa só, afinal, se a palavra existe no dicionário
+        #Também deve existir como coluna.
+    if verify_coluna_existe(matrix, n) == False:
+        print("nova coluna sendo adicionada! " + n)
+        add_coluna(matrix, n)
+
+#interface de usuário
+def user_message_to_matrix(message, matrix, dic):
+    messageArray = split_mensagem(message)
+    uniquePalavras = palavras_unicas_por_mensagem(messageArray)
+    for m in uniquePalavras:
+        setup(matrix, dic, m)
+    for n in uniquePalavras:
+        print("HORA DO "+ n)
+        update_value_frequencia_coluna(matrix, dic, messageArray, n)
+    
+def pap():
     ch = int(input('''Aperte....\n > 1 para carregar matrix. \n > 2 para criar nova matrix do zero.\n '''))
+    #adicionar código para selecionar matrix disponíveis na pasta
     if ch == 1:
         try:
             matrix = loadMatrix()
+            user_message_to_matrix(input("...Matrix: "+matrix[0].titulo+"\nVersão 1 da interface do Dict - \nGuia de\nNavegação,\nOrientação e\nSuporte \nExtrapessoal \n\n Sujeito a alterações."))
         except:
             print("erro no carregamento da matrix.")
+            yn = str(input("Deseja iniciar uma nova matrix? (S/N)"))
+            if yn.lower() == 's':
+                matrix = []
+                dic = []
+                #adicionar código para nomear sua própria matrix
+                user_message_to_matrix(input("...Matrix: Sem titulo...\nVersão 1 da interface do Dict - \nGuia de\nNavegação,\nOrientação e\nSuporte \nExtrapessoal \n\n Sujeito a alterações."), matrix, dic)
+            else:
+                exit()
     else:
-        matrix = []
+        #adicionar código para nomear sua própria matrix
+        user_message_to_matrix(input("...Matrix: "+matrix[0].titulo+"\nVersão 1 da interface do Dict - \nGuia de\nNavegação,\nOrientação e\nSuporte \nExtrapessoal \n\n Sujeito a alterações."))
+            
