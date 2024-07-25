@@ -24,11 +24,7 @@ def palavras_unicas_por_mensagem(mensagemArray):
 '''
 def loop_palavras_ordenadas_por_menor_index(uniquePalavras, dic, menorPalavra, novaOrdem):
    
-    print("problema sis")
     for n in uniquePalavras:
-        print("problema loop")
-        print(n)
-        print(menorPalavra)
         if dic_index(dic, n) < menorPalavra:
             menorPalavra = dic_index(dic, n)
     novaOrdem.append(dic[menorPalavra])
@@ -103,24 +99,32 @@ def update_value_frequencia_coluna(matrix, dic, mensagemArray, palavra):
     retirar_valor_de_array(palavra, mensagemArray)
     print(mensagemArray)
     
+
     coluna = matrix[dic_index(dic, palavra)]
     for n in mensagemArray:
-        print(n)
-        print(palavra)
-        #agora vamos adicionar na coluna um valor mais um para cada aparição de uma palavra
-        #assume-se que todas as palavras do mensagemArray já estejam registradas como uma linha
-        #no dicionário
-        print(len(dic))
-        print("papo reto")
-        print(dic_index(dic, n))
-        print(dic_index(dic, palavra))
-        print(dic_index(dic, n) - dic_index(dic, palavra)-1)
-        valor = coluna.getCorpo(dic_index(dic, n) - dic_index(dic, palavra)-1)
-        
-        #valor = coluna.corpo[dic_index(dic, n) - dic_index(dic, palavra)-1]
-        print(dic_index(dic, n))
-        print(dic_index(dic, palavra))
-        coluna.setCorpo(dic_index(dic, n) - dic_index(dic, palavra)-1, valor+1)
+        if dic_index(dic, n)<dic_index(dic, palavra):
+            print(palavra + "[CASO ESPECIAL] item novo em coluna antiga " + n)
+            colunaN = matrix[dic_index(dic, n)]
+            valor = colunaN.getCorpo(dic_index(dic, palavra) - dic_index(dic, n)-1)
+            colunaN.setCorpo(dic_index(dic, palavra) - dic_index(dic, n)-1, valor+1)
+        else:
+            print(n)
+            print(palavra)
+            #agora vamos adicionar na coluna um valor mais um para cada aparição de uma palavra
+            #assume-se que todas as palavras do mensagemArray já estejam registradas como uma linha
+            #no dicionário
+            print(len(dic))
+            print("papo reto")
+            print(dic_index(dic, n))
+            print(dic_index(dic, palavra))
+            print(dic_index(dic, n) - dic_index(dic, palavra)-1)
+            #Se o index da palavra for maior que o index de n, o valor será negativo e o processo deverá ser feito adicionando palavra no corpo n e não o contrário
+            valor = coluna.getCorpo(dic_index(dic, n) - dic_index(dic, palavra)-1)
+            
+            #valor = coluna.corpo[dic_index(dic, n) - dic_index(dic, palavra)-1]
+            print(dic_index(dic, n))
+            print(dic_index(dic, palavra))
+            coluna.setCorpo(dic_index(dic, n) - dic_index(dic, palavra)-1, valor+1)
 
     print("coluna montada")
     print(palavra +"..."+ str(coluna.corpo))
@@ -210,8 +214,8 @@ def setup(matrix, dic, n):
 def bot_response(inp):
     response = "Resposta\n"
     return response
-    
-#interface de usuário
+
+#função principal de user -> dict
 def user_message_to_matrix(message, matrix, dic):
     messageArray = split_mensagem(message)
     uniquePalavras = palavras_unicas_por_mensagem(messageArray)
@@ -219,20 +223,29 @@ def user_message_to_matrix(message, matrix, dic):
         setup(matrix, dic, m)
     print(uniquePalavras)
     print("bora bill")
+    
     for n in uniquePalavras:
         print("HORA DO "+ n)
         update_value_frequencia_coluna(matrix, dic, messageArray, n)
+
     print("matrix...")
     for n in range(len(matrix)):
         print(matrix[n].titulo+"..."+str(matrix[n].corpo))
+
     print("dic...")
     for n in range(len(dic)):
         print(dic[n])
+
+    #saveCoisas
     saveDic(dic)
     saveMatrix(matrix)
+
+    #futuramente irá retornar uma resposta do bot
     bot_response(message)
+    #retorna para a função de input
     inpt(matrix, dic)
-    
+
+#interface de usuário 
 def inpt(matrix, dic):
     message = str(input("\n"))
     if message == "quit":
