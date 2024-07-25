@@ -52,7 +52,8 @@ def organizar_questionArray_por_index(questionArray, dic):
     return questionArrayIndexed
 #percebi agora que organizar todos os items por array não vai ser tão necessário, vai ser bom fazer isso aí em duplas, pois então
 #vou poder comparar uma palavra com a próxima, não tenho certeza ainda de como vai funcionar, vou usar esse aqui msm.
-    
+
+#segundo metodo mais importante da classe(afirmação subjetiva).  
 def percorrer_array(questionArray, energia):
     #dada uma palavra, ela só vai ter acesso às palavras com index maior que ela
     #então se ela quiser procurar uma palavra que se encaixe nesse caso, o caminho terá
@@ -61,7 +62,33 @@ def percorrer_array(questionArray, energia):
     matrix = loadMatrix()
     dic = loadDic()
     questionArrayByIndex = organizar_questionArray_por_index(questionArray, dic)
+    #pegar primeira palavra, encontrar as outras duas, e tentar encontrar as próximas
+    #sem perder toda a energia. já que estou começando com o menor index, com certeza os
+    #outros dois estarão dentro dele e assim em diante.
+
+    #debug
+    palavraInicial = questionArrayByIndex[0]
+    palavraFinal = questionArrayByIndex[len(questionArrayByIndex)-1]
+    #fim debug
+    search(10, palavraInicial, palavraFinal, dic, matrix)
+
     
+#getPeso
+def getPeso(matrix, palavraInicialIndex, palavraFinalIndex):
+    peso = matrix[palavraInicialIndex].corpo[palavraFinalIndex-len(matrix)+1]
+    return peso
+    
+def search(energia, palavraInicial, palavraFinal, dic, matrix):
+    print("search")
+    caminhoResposta = []
+    palavraInicialIndex = dic_index(dic, palavraInicial)
+    palavraFinalIndex = dic_index(dic, palavraFinal)
+    getPeso(matrix, palavraInicialIndex, palavraFinalIndex)
+    print("fim")
+    if getPeso(matrix, palavraInicialIndex, palavraFinalIndex)< energia:
+        caminhoResposta.append(palavraFinal)
+        energia = energia -1
+
 #dic
 def is_word_in_dic(dic, word):
     for n in dic:
@@ -103,4 +130,4 @@ def loadDic():
 
 def debug():
     init_answer("assenta na roda")
-    init_answer("roda na assenta")
+    init_answer("roda assenta")
