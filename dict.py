@@ -181,9 +181,11 @@ def setup(matrix, dic, n):
     if verify_coluna_existe(matrix, n) == False:
         print("nova coluna sendo adicionada! " + n)
         add_coluna(matrix, n)
+        
 #response do bot
 def bot_response(inp):
-    response = "Resposta\n"
+    import response as r
+    response = r.init_answer(inp)
     return response
 
 #função principal de user -> dict
@@ -212,7 +214,7 @@ def user_message_to_matrix(message, matrix, dic):
     saveMatrix(matrix)
 
     #futuramente irá retornar uma resposta do bot
-    bot_response(message)
+    print(bot_response(message))
     #retorna para a função de input
     inpt(matrix, dic)
 
