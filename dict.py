@@ -110,10 +110,11 @@ def update_value_frequencia_coluna(matrix, dic, mensagemArray, palavra):
         #agora vamos adicionar na coluna um valor mais um para cada aparição de uma palavra
         #assume-se que todas as palavras do mensagemArray já estejam registradas como uma linha
         #no dicionário
+        print(len(dic))
         print("papo reto")
         print(dic_index(dic, n))
-        print(dic_index(dic, palavra)-1)
-        print(len(dic))
+        print(dic_index(dic, palavra))
+        print(dic_index(dic, n) - dic_index(dic, palavra)-1)
         valor = coluna.getCorpo(dic_index(dic, n) - dic_index(dic, palavra)-1)
         
         #valor = coluna.corpo[dic_index(dic, n) - dic_index(dic, palavra)-1]
