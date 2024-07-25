@@ -21,36 +21,7 @@ def palavras_unicas_por_mensagem(mensagemArray):
             palavrasUnicasPorMensagem.append(x)
     
     return palavrasUnicasPorMensagem
-'''
-def loop_palavras_ordenadas_por_menor_index(uniquePalavras, dic, menorPalavra, novaOrdem):
-   
-    for n in uniquePalavras:
-        if dic_index(dic, n) < menorPalavra:
-            menorPalavra = dic_index(dic, n)
-    novaOrdem.append(dic[menorPalavra])
-    
-    if len(uniquePalavras) == 1:
-        novaOrdem.append(uniquePalavras[0])
-        print("nova ordem")
-        print(novaOrdem)
-        return novaOrdem
-    else:
-        print("probleminha")
-        print(uniquePalavras)
-        print("probleminha")
-        print(menorPalavra)
-        uniquePalavras.remove(uniquePalavras[menorPalavra])
-        print("probleminha remove")
-        print(uniquePalavras)
-        return loop_palavras_ordenadas_por_menor_index(uniquePalavras, dic, len(uniquePalavras)-1, novaOrdem)
-    
-def palavras_ordenadas_por_menor_index(uniquePalavras, dic):
-    menorPalavra = "placeholder"
-    novaOrdem = []
-    uniquePalavras = loop_palavras_ordenadas_por_menor_index(uniquePalavras, dic, len(uniquePalavras)-1, novaOrdem)
-    print(uniquePalavras)
-    return uniquePalavras
-    '''
+
 #coluna
 class coluna:
     def __init__(self, titulo):
@@ -249,6 +220,7 @@ def user_message_to_matrix(message, matrix, dic):
 def inpt(matrix, dic):
     message = str(input("\n"))
     if message == "quit":
+        #saveMatrix(matrix)
         exit()
     user_message_to_matrix(message, matrix, dic)
 
