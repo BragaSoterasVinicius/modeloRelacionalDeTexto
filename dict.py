@@ -34,16 +34,27 @@ class coluna:
         
     def setCorpo(self, pos, value):
         if len(self.corpo) == 0:
+            print(self.corpo)
             self.corpo.append(0)
         if len(self.corpo)-1 < pos:
-            for n in range(self.corpo[len(self.corpo)-1],pos):
+            print(self.corpo)
+            for n in range(len(self.corpo)-1,pos):
+                print(self.corpo)
                 self.corpo.append(0)
+                print(self.corpo)
+                print(len(self.corpo)-1)
+            print("deveria ter ido ate", pos)
+            print(value)
             self.corpo.append(value)
         else:
+            print(self.corpo[pos])
             self.corpo[pos] = value
 
     def getCorpo(self, pos):
+        print(len(self.corpo)-1)
+        print(pos)
         if len(self.corpo)-1 < pos:
+            print("rpgasd")
             self.setCorpo(pos, 0)
         return self.corpo[pos]
         
@@ -73,9 +84,12 @@ def update_value_frequencia_coluna(matrix, dic, mensagemArray, palavra):
 
     coluna = matrix[dic_index(dic, palavra)]
     for n in mensagemArray:
-        if dic_index(dic, n)<dic_index(dic, palavra):
+        if dic_index(dic, n) < dic_index(dic, palavra):
             print(palavra + "[CASO ESPECIAL] item novo em coluna antiga " + n)
             colunaN = matrix[dic_index(dic, n)]
+            print(dic_index(dic, palavra))
+            print(dic_index(dic, n))
+            print(dic_index(dic, palavra) - dic_index(dic, n)-1)
             valor = colunaN.getCorpo(dic_index(dic, palavra) - dic_index(dic, n)-1)
             colunaN.setCorpo(dic_index(dic, palavra) - dic_index(dic, n)-1, valor+1)
         else:
