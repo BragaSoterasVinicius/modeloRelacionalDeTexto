@@ -259,9 +259,11 @@ def old_matrix_dic():
     try:
         matrix = loadMatrix()
         dic = loadDic()
+        tela_inicial(matrix, dic)
     except:
         print("erro no carregamento da matrix. - old_matrix_dic()")
-    tela_inicial(matrix, dic)
+        new_matrix_dic(str(input('Insira um novo nome para a matrix...')))
+   
         
 if __name__ == "__main__":
     ch = int(input('''Aperte....\n > 1 para carregar matrix. \n > 2 para criar nova matrix do zero.\n '''))
