@@ -32,7 +32,7 @@ def init_answer(question):
 
     #nesse momento conjuntoReposta já deve ter as palavras que vai usar para responder, entre aspas, a pergunta
 
-    return "resposta"
+    return conjuntoResposta
 
 #msm coisa que o split_mensagem do dict.py
 def build_array(question):
@@ -67,27 +67,67 @@ def percorrer_array(questionArray, energia):
     #outros dois estarão dentro dele e assim em diante.
 
     #debug
-    palavraInicial = questionArrayByIndex[0]
-    palavraFinal = questionArrayByIndex[len(questionArrayByIndex)-1]
+    
     #fim debug
-    search(10, palavraInicial, palavraFinal, dic, matrix)
+    
+    responseArrayFinal = []
+    for num in range(len(questionArrayByIndex)):
+        listaProibida = []
+        listaResposta = []
+        print("range", len(questionArrayByIndex))
+        palavraInicial = questionArrayByIndex[num]
+        print("rodada ",num ," ", palavraInicial)
+        if num == len(questionArrayByIndex)-1:
+            break
+        palavraFinal = questionArrayByIndex[num+1]
+        print("search")
+        newSearch = search(palavraInicial, palavraFinal, listaProibida, energia, listaResposta, matrix, dic)
+        print("search rodada ", num, "palavra Inicial: ", palavraInicial, "\npalavra Final: ", palavraFinal)
+        print(newSearch)
+        responseArrayFinal.append(newSearch)
 
+    #responseStrFinal = " ".join(map(str, responseArrayFinal))
+    responseStrFinal = search_build_string(responseArrayFinal)
+    
+    print("array original "+ str(questionArrayByIndex))
+    print("array que temos"+ str(responseArrayFinal))
+    print(search_build_string(responseArrayFinal))
+    return search_build_string(responseArrayFinal)
     
 #getPeso
 def getPeso(matrix, palavraInicialIndex, palavraFinalIndex):
     peso = matrix[palavraInicialIndex].corpo[palavraFinalIndex-len(matrix)+1]
     return peso
     
-def search(energia, palavraInicial, palavraFinal, dic, matrix):
-    print("search")
-    caminhoResposta = []
-    palavraInicialIndex = dic_index(dic, palavraInicial)
-    palavraFinalIndex = dic_index(dic, palavraFinal)
-    getPeso(matrix, palavraInicialIndex, palavraFinalIndex)
-    print("fim")
-    if getPeso(matrix, palavraInicialIndex, palavraFinalIndex)< energia:
-        caminhoResposta.append(palavraFinal)
-        energia = energia -1
+def search(inicio, fim, listaProibida, energia, listaResposta, matrix, dic):
+    #esse método é só para ir de uma palavra para outra, deve ser executada EM PARES
+    #encontre f que n esteja na lista proibida e concorde com o gasto de energia
+    # na lista[inicio]
+    print(energia)
+    energiaOriginal = energia
+    pos = 0
+    for peso in matrix[dic_index(dic, inicio)].corpo:
+        print(pos)
+        if matrix[dic_index(dic, inicio)+pos+1].titulo not in listaProibida and peso < energia:
+            if energia< 3:
+                listaProibida.append(matrix[dic_index(dic, inicio)+pos+1].titulo)
+                return search(inicio, fim, listaProibida, energiaOriginal, listaResposta, matrix, dic)
+            else:
+                listaResposta.append(matrix[dic_index(dic, inicio)+pos+1].titulo)
+                inicio = listaResposta[len(listaResposta)-1]
+                if listaResposta[len(listaResposta)-1] == fim:
+                    return listaResposta
+                return search(inicio, fim, listaProibida, energia, listaResposta, matrix, dic)
+        pos += 1
+
+def search_build_string(listaResposta):
+    stringResposta = ''
+    for n in listaResposta:
+        if n != None:
+            for m in n:
+                stringResposta +=(m)
+                stringResposta += " " 
+    return(stringResposta)
 
 #dic
 def is_word_in_dic(dic, word):
@@ -129,5 +169,5 @@ def loadDic():
 #debug response
 
 def debug():
-    init_answer("assenta na roda")
-    init_answer("roda assenta")
+    init_answer("Receba um bot do Bora Bill favela")
+    
