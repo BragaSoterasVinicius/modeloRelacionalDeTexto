@@ -23,9 +23,13 @@ class coluna:
             self.setCorpo(pos, 0)
         return self.corpo[pos]
 
+def set_energia():
+    #A energia média do percurso também pode ser entendida como quanto esforço a máquina vai colocar para encontrar ligações
+    #Quanto maior a energia, menos resultados vazios, mais palavras.
+
 def init_answer(question):
     #Futuramente a energia terá que mudar com base em um valor médio dos conhecimentos
-    energia = 10
+    energia = 1000
     #função principal da classe
     questionArray = build_array(question)
     conjuntoResposta = percorrer_array(questionArray, energia)
