@@ -116,14 +116,36 @@ def peso_medio_da_coluna(coluna, matrix, dic):
     print("valor médio da coluna "+matrix[dic_index(dic, coluna)].titulo+": "+ str(m))
     return m
 
+def pegar_lista_de_percentuais_para_coluna(coluna):
+    listaPercentuais = []
+    ptl = 100/len(coluna.corpo)
+    for n in range(len(coluna.corpo)):
+        m = (n+1)*ptl
+        listaPercentuais.append(m)
+    return listaPercentuais
 
+def pegar_valor_de_Q(listaPercentuais, coluna, valor):
+    Q = listaPercentuais[coluna.index(valor)]
+    Q = Q/100
+    return Q
+        
+
+#Quando duas palavras ficam MUITO ligadas, o custo para conectalas, fica negativo, o que infelizmente atrapalha o funcionamento do programa
+#Pois o custo é extraido da energia, se esse custo é negativo, a energia aumenta. A energia sempre deve cair, mesmo que pouco para items muito relacionados.
 def custo_do_peso_de(palavra, a, matrix, dic):
-    indexRelativoDePalavraEmA = dic_index(dic, palavra) - dic_index(dic, a)
+    energia = set_energia()
+    percentuais = pegar_lista_de_percentuais_para_coluna(matrix[dic_index(dic, a)])
+    #Quanto maior o Q (mais próximo de 1), mais da energia será guardada
+    coluna = matrix[dic_index(dic, a)].corpo
+    Q = pegar_valor_de_Q(percentuais, coluna, coluna[dic_index(dic, palavra) - dic_index(dic, a)])
+    novaEnergia = energia*Q
+    energiam = energia-novaEnergia
+    '''indexRelativoDePalavraEmA = dic_index(dic, palavra) - dic_index(dic, a)
     pesoDePalavraEmA = matrix[dic_index(dic, a)].corpo[indexRelativoDePalavraEmA]
     pesoMedio = peso_medio_da_coluna(a, matrix, dic)
     conexaoIdeal = pesoMedio*2
-    custoPeso = conexaoIdeal - pesoDePalavraEmA
-    return custoPeso
+    custoPeso = conexaoIdeal - pesoDePalavraEmA'''
+    return energiam
 
 def cria_conjunto_pagavel_palavra_de(a, energia, matrix, dic):
     conjunto = []
