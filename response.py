@@ -26,7 +26,8 @@ class coluna:
 def set_energia():
     #A energia média do percurso também pode ser entendida como quanto esforço a máquina vai colocar para encontrar ligações
     #Quanto maior a energia, menos resultados vazios, mais palavras.
-    return 1000
+    
+    return 20
 
 def init_answer(question):
     #Futuramente a energia terá que mudar com base em um valor médio dos conhecimentos
@@ -79,6 +80,7 @@ def percorrer_array(questionArray, energia):
     for num in range(len(questionArrayByIndex)):
         listaProibida = []
         listaResposta = []
+        listatotal = []
         print("range", len(questionArrayByIndex))
         palavraInicial = questionArrayByIndex[num]
         print("rodada ",num ," ", palavraInicial)
@@ -86,7 +88,9 @@ def percorrer_array(questionArray, energia):
             break
         palavraFinal = questionArrayByIndex[num+1]
         print("search")
-        newSearch = search(palavraInicial, palavraFinal, listaProibida, energia, listaResposta, matrix, dic)
+        pos = 0
+        #newSearch = search(palavraInicial, palavraFinal, listaProibida, energia, listaResposta, matrix, dic, pos)
+        newSearch = search_a(energia, listatotal, palavraInicial, palavraFinal, matrix, dic)
         print("search rodada ", num, "palavra Inicial: ", palavraInicial, "\npalavra Final: ", palavraFinal)
         print(newSearch)
         responseArrayFinal.append(newSearch)
@@ -103,27 +107,87 @@ def percorrer_array(questionArray, energia):
 def getPeso(matrix, palavraInicialIndex, palavraFinalIndex):
     peso = matrix[palavraInicialIndex].corpo[palavraFinalIndex-len(matrix)+1]
     return peso
-    
-def search(inicio, fim, listaProibida, energia, listaResposta, matrix, dic):
+
+def peso_medio_da_coluna(coluna, matrix, dic):
+    m = 0
+    for n in matrix[dic_index(dic, coluna)].corpo:
+        m = m+n
+    m = m/ len(matrix[dic_index(dic, coluna)].corpo)-1
+    print("valor médio da coluna "+matrix[dic_index(dic, coluna)].titulo+": "+ str(m))
+    return m
+
+
+def custo_do_peso_de(palavra, a, matrix, dic):
+    indexRelativoDePalavraEmA = dic_index(dic, palavra) - dic_index(dic, a)
+    pesoDePalavraEmA = matrix[dic_index(dic, a)].corpo[indexRelativoDePalavraEmA]
+    pesoMedio = peso_medio_da_coluna(a, matrix, dic)
+    conexaoIdeal = pesoMedio*2
+    custoPeso = conexaoIdeal - pesoDePalavraEmA
+    return custoPeso
+
+def cria_conjunto_pagavel_palavra_de(a, energia, matrix, dic):
+    conjunto = []
+    indexrelativo = -1
+    coluna = matrix[dic_index(dic, a)].corpo
+    for peso in coluna:
+        indexrelativo += 1
+        if peso < energia:
+            posicaoGlobalDaPalavraSelecionada = dic_index(dic, a)+indexrelativo 
+            palavra = matrix[posicaoGlobalDaPalavraSelecionada].titulo
+            conjunto.append(palavra)
+    return conjunto
+
+def search_a(energia, listatotal, a, b, matrix, dic):
+    print("como vai a lista:", str(listatotal))
+    listatotal.append(a)
+    backupEnergia = energia
+    backupListaTotal = listatotal
+    if (dic_index(dic, b) - dic_index(dic, a)) <= len(matrix[dic_index(dic, a)].corpo)-1:
+        if custo_do_peso_de(b, a, matrix, dic) < energia:
+            listatotal.append(b)
+            return listatotal
+        else:
+            conjuntoPagavel = cria_conjunto_pagavel_palavra_de(a, energia, matrix, dic)
+            for palavra in conjuntoPagavel:
+                energia = energia - custo_do_peso_de(palavra, a, matrix, dic)
+                novaListaTotal = listatotal
+                novaEnergia = energia
+                searchA = search_a(novaEnergia, novaListaTotal, palavra, b, matrix, dic) 
+                if searchA != None:
+                    return searchA
+                else:
+                    #energia e listatotal devem permanecer os mesmos,
+                    # pegando os valores que possuiam antes do loop,
+                    # em cada loop, eh como se fossem um backup para ir atras nas listas mesmo
+                    energia = backupEnergia
+                    listatotal = backupListaTotal
+    else:
+        return None
+                
+                
+def search(inicio, fim, listaProibida, energia, listaResposta, matrix, dic, pos):
     #esse método é só para ir de uma palavra para outra, deve ser executada EM PARES
     #encontre f que n esteja na lista proibida e concorde com o gasto de energia
     # na lista[inicio]
     print(energia)
     energiaOriginal = energia
-    pos = 0
+    
     for peso in matrix[dic_index(dic, inicio)].corpo:
-        print(pos)
-        if matrix[dic_index(dic, inicio)+pos+1].titulo not in listaProibida and peso < energia:
-            if energia< 3:
+        print("posição do corpo de "+str(inicio) + "na matrix eh" + str(pos))
+        if matrix[dic_index(dic, inicio)+pos-1].titulo not in listaProibida and peso < energia:
+            if energia<- 999:
                 listaProibida.append(matrix[dic_index(dic, inicio)+pos+1].titulo)
-                return search(inicio, fim, listaProibida, energiaOriginal, listaResposta, matrix, dic)
+                pos += 1
+                return search(inicio, fim, listaProibida, energiaOriginal, listaResposta, matrix, dic, pos)
             else:
                 listaResposta.append(matrix[dic_index(dic, inicio)+pos+1].titulo)
+                energia = energia - (peso*-1)
                 inicio = listaResposta[len(listaResposta)-1]
                 if listaResposta[len(listaResposta)-1] == fim:
                     return listaResposta
-                return search(inicio, fim, listaProibida, energia, listaResposta, matrix, dic)
-        pos += 1
+                pos += 1
+                return search(inicio, fim, listaProibida, energia, listaResposta, matrix, dic, pos)
+        
 
 def search_build_string(listaResposta):
     stringResposta = ''
