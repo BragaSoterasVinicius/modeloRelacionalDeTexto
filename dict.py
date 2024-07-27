@@ -228,10 +228,7 @@ def user_message_to_matrix(message, matrix, dic):
     saveMatrix(matrix)
 
     print(bot_response(message))
-    #retorna para a função de input
-    inpt(matrix, dic)
-
-
+    
 #interface de usuário 
 def inpt(matrix, dic):
     message = str(input("\n"))
@@ -239,16 +236,23 @@ def inpt(matrix, dic):
         #saveMatrix(matrix)
         exit()
     user_message_to_matrix(message, matrix, dic)
+    #retorna para a função de input
+    inpt(matrix, dic)
 
 def tela_inicial(matrix, dic):
     if len(matrix)<1:
         print("...Matrix: Sem titulo...\nVersão 1 da interface do Dict - \nGuia de\nNavegação,\nOrientação e\nSuporte \nExtrapessoal \n\n Sujeito a alterações.")
     else:
         print("...Matrix: "+matrix[0].titulo+"...\nVersão 1 da interface do Dict - \nGuia de\nNavegação,\nOrientação e\nSuporte \nExtrapessoal \n\n Sujeito a alterações.")
-    inpt(matrix, dic)
+    choice0 = int(input("Deseja proceder para conversa (1) ou estudo de pdfs(2)?"))
+    if choice0 == 1 :
+        inpt(matrix, dic)
+    else:
+        run_study(matrix, dic)
+        
 
 #função de estudo de pdfs:
-def run_study():
+def run_study(matrix, dic):
     import livros.pdfReader as p
     #Adicionar meio para que possa ler quais livros estão dentro da sua pasta e só selecionar por um index
     bookName = str(input("qual o nome do livro?"))
@@ -256,7 +260,7 @@ def run_study():
     lastPage  = int(input("Até qual pagina a leitura deve ir?"))
     bookContent = p.readBook(bookName, firstPage, lastPage)
     for linha in bookContent:
-        linha
+        user_message_to_matrix(linha, matrix, dic)
     print("estudo finalizado")
 
 def new_matrix_dic(NewName):
@@ -281,9 +285,7 @@ if __name__ == "__main__":
     ch = int(input('''Aperte....\n > 1 para carregar matrix. \n > 2 para criar nova matrix do zero.\n > 3 para selecionar um pdf de estudo ao robô. \n'''))
     #adicionar código para selecionar matrix disponíveis na pasta
     if ch == 1:
-        old_matrix_dic()
-    if ch == 3:
-        run_study()
+        old_matrix_dic()    
     else:
         yn = str(input("Deseja iniciar uma nova matrix? (S/N)\n(estará apagando a antiga...)"))
         if yn.lower() == 's':
