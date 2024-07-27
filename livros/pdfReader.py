@@ -12,5 +12,9 @@ def readBook(bookName, primeiraPagina, ultimaPagina):
     for paginaNumero in range(primeiraPagina, ultimaPagina):
         page = pdf_reader.get_page(paginaNumero)
     output = page.extract_text()
+    groups = output.split('\n')
+    print(groups)
+    return groups
 
-    return output
+
+readBook("biblia.pdf", 76, 79)

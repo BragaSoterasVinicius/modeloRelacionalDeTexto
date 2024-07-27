@@ -227,10 +227,10 @@ def user_message_to_matrix(message, matrix, dic):
     saveDic(dic)
     saveMatrix(matrix)
 
-    #futuramente irá retornar uma resposta do bot
     print(bot_response(message))
     #retorna para a função de input
     inpt(matrix, dic)
+
 
 #interface de usuário 
 def inpt(matrix, dic):
@@ -246,7 +246,19 @@ def tela_inicial(matrix, dic):
     else:
         print("...Matrix: "+matrix[0].titulo+"...\nVersão 1 da interface do Dict - \nGuia de\nNavegação,\nOrientação e\nSuporte \nExtrapessoal \n\n Sujeito a alterações.")
     inpt(matrix, dic)
-    
+
+#função de estudo de pdfs:
+def run_study():
+    import livros.pdfReader as p
+    #Adicionar meio para que possa ler quais livros estão dentro da sua pasta e só selecionar por um index
+    bookName = str(input("qual o nome do livro?"))
+    firstPage = int(input("em qual pagina o robô deve iniciar a leitura?"))
+    lastPage  = int(input("Até qual pagina a leitura deve ir?"))
+    bookContent = p.readBook(bookName, firstPage, lastPage)
+    for linha in bookContent:
+        linha
+    print("estudo finalizado")
+
 def new_matrix_dic(NewName):
     #adicionar código para nomear sua própria matrix
     matrix = []
@@ -266,10 +278,12 @@ def old_matrix_dic():
    
         
 if __name__ == "__main__":
-    ch = int(input('''Aperte....\n > 1 para carregar matrix. \n > 2 para criar nova matrix do zero.\n '''))
+    ch = int(input('''Aperte....\n > 1 para carregar matrix. \n > 2 para criar nova matrix do zero.\n > 3 para selecionar um pdf de estudo ao robô. \n'''))
     #adicionar código para selecionar matrix disponíveis na pasta
     if ch == 1:
         old_matrix_dic()
+    if ch == 3:
+        run_study()
     else:
         yn = str(input("Deseja iniciar uma nova matrix? (S/N)\n(estará apagando a antiga...)"))
         if yn.lower() == 's':
