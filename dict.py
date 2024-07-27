@@ -255,7 +255,7 @@ def tela_inicial(matrix, dic):
 def run_study(matrix, dic):
     import livros.pdfReader as p
     #Adicionar meio para que possa ler quais livros estão dentro da sua pasta e só selecionar por um index
-    bookName = str(input("qual o nome do livro?"))
+    bookName = str(input("qual o nome do livro?"))+".pdf"
     firstPage = int(input("em qual pagina o robô deve iniciar a leitura?"))
     lastPage  = int(input("Até qual pagina a leitura deve ir?"))
     bookContent = p.readBook(bookName, firstPage, lastPage)
@@ -275,17 +275,20 @@ def old_matrix_dic():
     try:
         matrix = loadMatrix()
         dic = loadDic()
-        tela_inicial(matrix, dic)
+        alreadySaved = True
     except:
+        alreadySaved = False
         print("erro no carregamento da matrix. - old_matrix_dic()")
         new_matrix_dic(str(input('Insira um novo nome para a matrix...')))
+    if alreadySaved:
+        tela_inicial(matrix, dic)
    
         
 if __name__ == "__main__":
-    ch = int(input('''Aperte....\n > 1 para carregar matrix. \n > 2 para criar nova matrix do zero.\n > 3 para selecionar um pdf de estudo ao robô. \n'''))
+    ch = int(input('''Aperte....\n > 1 para carregar matrix. \n > 2 para criar nova matrix do zero.\n'''))
     #adicionar código para selecionar matrix disponíveis na pasta
     if ch == 1:
-        old_matrix_dic()    
+        old_matrix_dic()
     else:
         yn = str(input("Deseja iniciar uma nova matrix? (S/N)\n(estará apagando a antiga...)"))
         if yn.lower() == 's':

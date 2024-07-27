@@ -15,6 +15,3 @@ def readBook(bookName, primeiraPagina, ultimaPagina):
     groups = output.split('\n')
     print(groups)
     return groups
-
-
-readBook("biblia.pdf", 76, 79)
