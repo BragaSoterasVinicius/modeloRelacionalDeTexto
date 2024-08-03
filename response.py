@@ -27,7 +27,7 @@ def set_energia():
     #A energia média do percurso também pode ser entendida como quanto esforço a máquina vai colocar para encontrar ligações
     #Quanto maior a energia, menos resultados vazios, mais palavras.
     
-    return 2
+    return 1
 
 def init_answer(question):
     #Futuramente a energia terá que mudar com base em um valor médio dos conhecimentos
@@ -138,7 +138,15 @@ def pegar_valor_de_Q(listaPercentuais, coluna, valor):
     Q = listaPercentuais[hierarquiaDeValores.index(valor)]
     Q = Q/100
     return Q
-        
+
+def valor_finder(dic, matrix, palavraX, palavraY):
+    if dic_index(dic, palavraX) > dic_index(dic, palavraY):
+        coluna = matrix[dic_index(dic, palavraY)].corpo
+        valor = coluna[dic_index(dic, palavraX) - dic_index(dic, palavraY)]
+    elif dic_index(dic, palavraX) <= dic_index(dic, palavraY):
+        coluna = matrix[dic_index(dic, palavraX)].corpo
+        valor = coluna[dic_index(dic, palavraY) - dic_index(dic, palavraX) ]
+    return valor
 
 #Quando duas palavras ficam MUITO ligadas, o custo para conectalas, fica negativo, o que infelizmente atrapalha o funcionamento do programa
 #Pois o custo é extraido da energia, se esse custo é negativo, a energia aumenta. A energia sempre deve cair, mesmo que pouco para items muito relacionados.
@@ -147,7 +155,8 @@ def custo_do_peso_de(palavra, a, matrix, dic):
     percentuais = pegar_lista_de_percentuais_para_coluna(matrix[dic_index(dic, a)])
     #Quanto maior o Q (mais próximo de 1), mais da energia será guardada
     coluna = matrix[dic_index(dic, a)].corpo
-    Q = pegar_valor_de_Q(percentuais, coluna, coluna[dic_index(dic, palavra) - dic_index(dic, a)])
+    valor = valor_finder(dic, matrix, palavra, a)
+    Q = pegar_valor_de_Q(percentuais, coluna, valor)
     novaEnergia = energia*Q
     energiam = energia-novaEnergia
     '''indexRelativoDePalavraEmA = dic_index(dic, palavra) - dic_index(dic, a)
@@ -169,16 +178,17 @@ def cria_conjunto_pagavel_palavra_de(a, energia, matrix, dic):
             conjunto.append(palavra)
     return conjunto
 
+#Todo o metodo devera ser refeito, levando em consideracao que nao posso mais assumir que o a seja menor no dic que o b, devido a capacidade de exploracao
 def search_a(energia, listatotal, a, b, matrix, dic):
     print("como vai a lista:", str(listatotal))
     if energia < 0:
-        return None
+        return listatotal
     listatotal.append(a)
     print("como vai a lista:", str(listatotal))
     backupEnergia = energia
     backupListaTotal = listatotal
     if (dic_index(dic, b) - dic_index(dic, a)) <= len(matrix[dic_index(dic, a)].corpo)-1:
-        if custo_do_peso_de(b, a, matrix, dic) < 1:
+        if custo_do_peso_de(b, a, matrix, dic) < energia:
             listatotal.append(b)
             return listatotal
         else:
