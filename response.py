@@ -27,7 +27,7 @@ def set_energia():
     #A energia média do percurso também pode ser entendida como quanto esforço a máquina vai colocar para encontrar ligações
     #Quanto maior a energia, menos resultados vazios, mais palavras.
     
-    return 20
+    return 2
 
 def init_answer(question):
     #Futuramente a energia terá que mudar com base em um valor médio dos conhecimentos
@@ -116,16 +116,26 @@ def peso_medio_da_coluna(coluna, matrix, dic):
     print("valor médio da coluna "+matrix[dic_index(dic, coluna)].titulo+": "+ str(m))
     return m
 
+#A lista de percentuais deveria ter haver com o valor de cada item e não sua posição na coluna
 def pegar_lista_de_percentuais_para_coluna(coluna):
     listaPercentuais = []
-    ptl = 100/len(coluna.corpo)
+    if(len(coluna.corpo) == 0):
+        ptl = 100
+    else:
+        ptl = 100/len(coluna.corpo)
     for n in range(len(coluna.corpo)):
         m = (n+1)*ptl
         listaPercentuais.append(m)
     return listaPercentuais
 
 def pegar_valor_de_Q(listaPercentuais, coluna, valor):
-    Q = listaPercentuais[coluna.index(valor)]
+    #O percentual aqui está somente baseado na distância do valor ao ponto de referencia. Que bobeira, deve ser em relacao ao seu valor
+    hierarquiaDeValores = []
+    #hierarquia de valores vai ter os valores da coluna na ordem do menor para o maior, assim, o valor menos presente será o de menor percentual, ou de maior gasto, enquanto o de maior valor 
+    #preservara 100 % do valor original. 
+    hierarquiaDeValores = hierarquiaDeValores + coluna
+    hierarquiaDeValores.sort()
+    Q = listaPercentuais[hierarquiaDeValores.index(valor)]
     Q = Q/100
     return Q
         
@@ -161,28 +171,32 @@ def cria_conjunto_pagavel_palavra_de(a, energia, matrix, dic):
 
 def search_a(energia, listatotal, a, b, matrix, dic):
     print("como vai a lista:", str(listatotal))
+    if energia < 0:
+        return None
     listatotal.append(a)
+    print("como vai a lista:", str(listatotal))
     backupEnergia = energia
     backupListaTotal = listatotal
     if (dic_index(dic, b) - dic_index(dic, a)) <= len(matrix[dic_index(dic, a)].corpo)-1:
-        if custo_do_peso_de(b, a, matrix, dic) < energia:
+        if custo_do_peso_de(b, a, matrix, dic) < 1:
             listatotal.append(b)
             return listatotal
         else:
             conjuntoPagavel = cria_conjunto_pagavel_palavra_de(a, energia, matrix, dic)
             for palavra in conjuntoPagavel:
-                energia = energia - custo_do_peso_de(palavra, a, matrix, dic)
-                novaListaTotal = listatotal
-                novaEnergia = energia
-                searchA = search_a(novaEnergia, novaListaTotal, palavra, b, matrix, dic) 
+                subenergia = 0
+                subenergia = energia - custo_do_peso_de(palavra, a, matrix, dic)
+                novaListaTotal = []
+                novaListaTotal = novaListaTotal + listatotal
+                searchA = search_a(subenergia, novaListaTotal, palavra, b, matrix, dic) 
                 if searchA != None:
                     return searchA
-                else:
+                #else:
                     #energia e listatotal devem permanecer os mesmos,
                     # pegando os valores que possuiam antes do loop,
                     # em cada loop, eh como se fossem um backup para ir atras nas listas mesmo
-                    energia = backupEnergia
-                    listatotal = backupListaTotal
+                 #   energia = backupEnergia
+                 #   listatotal = backupListaTotal
     else:
         return None
                 
