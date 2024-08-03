@@ -23,11 +23,11 @@ class coluna:
             self.setCorpo(pos, 0)
         return self.corpo[pos]
 
-def set_energia():
+def set_energia(coluna):
     #A energia média do percurso também pode ser entendida como quanto esforço a máquina vai colocar para encontrar ligações
     #Quanto maior a energia, menos resultados vazios, mais palavras.
-    
-    return 1
+    resistencia = sum(coluna)/len(coluna)
+    return resistencia
 
 def init_answer(question):
     #Futuramente a energia terá que mudar com base em um valor médio dos conhecimentos
@@ -188,7 +188,7 @@ def search_a(energia, listatotal, a, b, matrix, dic):
     backupEnergia = energia
     backupListaTotal = listatotal
     if (dic_index(dic, b) - dic_index(dic, a)) <= len(matrix[dic_index(dic, a)].corpo)-1:
-        if custo_do_peso_de(b, a, matrix, dic) < energia:
+        if custo_do_peso_de(b, a, matrix, dic) < 0.5:
             listatotal.append(b)
             return listatotal
         else:
