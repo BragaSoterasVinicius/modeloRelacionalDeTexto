@@ -42,7 +42,7 @@ def makeUsableLista(colunaPalavraInicial, limiteCognitivo, matrix, dic):
             listaDeSubPalavrasUsaveis.append(palavra)
     return listaDeSubPalavrasUsaveis
 
-def conversa(listaTotal, palavraInicial, palavraFinal, matrix, dic):
+def conversa_em_par(listaTotal, palavraInicial, palavraFinal, matrix, dic):
     listaTotal.append(palavraInicial)
     limiteCognitivo = 0.7
     colunaRelevante = matrix[dic_index(dic, palavraInicial)]
@@ -53,7 +53,7 @@ def conversa(listaTotal, palavraInicial, palavraFinal, matrix, dic):
         for eachMiddlePalavra in listaDeSubPrimarios:
             subListaTotal = []
             subListaTotal = subListaTotal + listaTotal
-            conversaAprofundada = conversa(subListaTotal, eachMiddlePalavra, palavraFinal, matrix, dic)
+            conversaAprofundada = conversa_em_par(subListaTotal, eachMiddlePalavra, palavraFinal, matrix, dic)
             print("palavra do meio" + eachMiddlePalavra)
             print("subConversaListaTotal" + str(conversaAprofundada))
 
@@ -78,7 +78,7 @@ def debugada():
     matrix.append(da1)
     matrix.append(monica1)
     listaTotal = []
-    conversa(listaTotal, "turma","monica", matrix, dic)
+    conversa_em_par(listaTotal, "turma","monica", matrix, dic)
 
     '''
         hear_a("turma", "da", matrix, dic)
