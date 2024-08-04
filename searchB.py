@@ -53,10 +53,11 @@ def conversa_em_par(listaTotal, palavraInicial, palavraFinal, matrix, dic, limit
         for eachMiddlePalavra in listaDeSubPrimarios:
             subListaTotal = []
             subListaTotal = subListaTotal + listaTotal
-            conversaAprofundada = conversa_em_par(subListaTotal, eachMiddlePalavra, palavraFinal, matrix, dic)
+            conversaAprofundada = conversa_em_par(subListaTotal, eachMiddlePalavra, palavraFinal, matrix, dic, limiteCognitivo)
             print("palavra do meio" + eachMiddlePalavra)
             print("subConversaListaTotal" + str(conversaAprofundada))
-
+            if conversaAprofundada != None:
+                return conversaAprofundada
     else:
         listaTotal.append(palavraFinal)
         print(listaTotal)
