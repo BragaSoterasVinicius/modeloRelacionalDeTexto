@@ -37,16 +37,16 @@ def makeUsableLista(colunaPalavraInicial, limiteCognitivo, matrix, dic):
     listaDeSubPalavrasUsaveis = []
     for n in range(len(colunaPalavraInicial.corpo)):
         n +=1
-        palavra =  dic[dic_index(dic, colunaPalavraInicial.titulo)+n]
+        palavra =  dic[dic_index(dic, colunaPalavraInicial.titulo)+n-1]
+        print("Index - "+ str(n)+": Gasto enérgico da palavra "+str(palavra)+" na coluna "+ str(colunaPalavraInicial.titulo) + "..." + str(getGasto(colunaPalavraInicial, palavra, matrix, dic)))
         if getGasto(colunaPalavraInicial, palavra, matrix, dic) < limiteCognitivo:
             listaDeSubPalavrasUsaveis.append(palavra)
     return listaDeSubPalavrasUsaveis
 
-def conversa_em_par(listaTotal, palavraInicial, palavraFinal, matrix, dic):
+def conversa_em_par(listaTotal, palavraInicial, palavraFinal, matrix, dic, limiteCognitivo):
     listaTotal.append(palavraInicial)
-    limiteCognitivo = 0.7
     colunaRelevante = matrix[dic_index(dic, palavraInicial)]
-    print(getGasto(colunaRelevante, palavraFinal, matrix, dic))
+    print("Gasto energético = " + str(getGasto(colunaRelevante, palavraFinal, matrix, dic)))
     if getGasto(colunaRelevante, palavraFinal, matrix, dic) > limiteCognitivo:
         listaDeSubPrimarios = makeUsableLista(colunaRelevante, limiteCognitivo, matrix, dic)
         print (listaDeSubPrimarios)
@@ -78,7 +78,7 @@ def debugada():
     matrix.append(da1)
     matrix.append(monica1)
     listaTotal = []
-    conversa_em_par(listaTotal, "turma","monica", matrix, dic)
+    conversa_em_par(listaTotal, "turma","monica", matrix, dic, 0.7)
 
     '''
         hear_a("turma", "da", matrix, dic)
