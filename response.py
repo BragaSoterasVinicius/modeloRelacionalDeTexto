@@ -23,11 +23,11 @@ class coluna:
             self.setCorpo(pos, 0)
         return self.corpo[pos]
 
-def set_energia(coluna):
+def set_energia():
     #A energia média do percurso também pode ser entendida como quanto esforço a máquina vai colocar para encontrar ligações
     #Quanto maior a energia, menos resultados vazios, mais palavras.
-    resistencia = sum(coluna)/len(coluna)
-    return resistencia
+    #A energia media pertence ao bot como um todo e deve ser resultado da sua base de conhecimentos.
+    return 20
 
 def init_answer(question):
     #Futuramente a energia terá que mudar com base em um valor médio dos conhecimentos
@@ -142,29 +142,27 @@ def pegar_valor_de_Q(listaPercentuais, coluna, valor):
 def valor_finder(dic, matrix, palavraX, palavraY):
     if dic_index(dic, palavraX) > dic_index(dic, palavraY):
         coluna = matrix[dic_index(dic, palavraY)].corpo
-        valor = coluna[dic_index(dic, palavraX) - dic_index(dic, palavraY)]
+        print(coluna)
+        valor = coluna[dic_index(dic, palavraX) - dic_index(dic, palavraY)-1]
     elif dic_index(dic, palavraX) <= dic_index(dic, palavraY):
         coluna = matrix[dic_index(dic, palavraX)].corpo
-        valor = coluna[dic_index(dic, palavraY) - dic_index(dic, palavraX) ]
+        valor = coluna[dic_index(dic, palavraY) - dic_index(dic, palavraX)-1]
     return valor
 
 #Quando duas palavras ficam MUITO ligadas, o custo para conectalas, fica negativo, o que infelizmente atrapalha o funcionamento do programa
 #Pois o custo é extraido da energia, se esse custo é negativo, a energia aumenta. A energia sempre deve cair, mesmo que pouco para items muito relacionados.
-def custo_do_peso_de(palavra, a, matrix, dic):
-    energia = set_energia()
+def custo_do_peso_de(palavra, a, matrix, dic, energia):
     percentuais = pegar_lista_de_percentuais_para_coluna(matrix[dic_index(dic, a)])
     #Quanto maior o Q (mais próximo de 1), mais da energia será guardada
     coluna = matrix[dic_index(dic, a)].corpo
     valor = valor_finder(dic, matrix, palavra, a)
     Q = pegar_valor_de_Q(percentuais, coluna, valor)
-    novaEnergia = energia*Q
-    energiam = energia-novaEnergia
     '''indexRelativoDePalavraEmA = dic_index(dic, palavra) - dic_index(dic, a)
     pesoDePalavraEmA = matrix[dic_index(dic, a)].corpo[indexRelativoDePalavraEmA]
     pesoMedio = peso_medio_da_coluna(a, matrix, dic)
     conexaoIdeal = pesoMedio*2
     custoPeso = conexaoIdeal - pesoDePalavraEmA'''
-    return energiam
+    return Q
 
 def cria_conjunto_pagavel_palavra_de(a, energia, matrix, dic):
     conjunto = []
@@ -185,23 +183,25 @@ def search_a(energia, listatotal, a, b, matrix, dic):
         return listatotal
     listatotal.append(a)
     print("como vai a lista:", str(listatotal))
-    backupEnergia = energia
-    backupListaTotal = listatotal
-    if (dic_index(dic, b) - dic_index(dic, a)) <= len(matrix[dic_index(dic, a)].corpo)-1:
-        if custo_do_peso_de(b, a, matrix, dic) < 0.5:
+    if (dic_index(dic, b) - dic_index(dic, a)) > 0:
+        Q = custo_do_peso_de(b, a, matrix, dic, energia)
+        print("relação "+str(Q))
+        if Q < 0.4:
+            energia = energia*Q
             listatotal.append(b)
             return listatotal
         else:
             conjuntoPagavel = cria_conjunto_pagavel_palavra_de(a, energia, matrix, dic)
             for palavra in conjuntoPagavel:
                 subenergia = 0
-                subenergia = energia - custo_do_peso_de(palavra, a, matrix, dic)
+                #subenergia = energia - custo_do_peso_de(palavra, a, matrix, dic)
+                Q = custo_do_peso_de(b, palavra, matrix, dic, energia)
+                subenergia = Q*energia
                 novaListaTotal = []
                 novaListaTotal = novaListaTotal + listatotal
                 searchA = search_a(subenergia, novaListaTotal, palavra, b, matrix, dic) 
                 if searchA != None:
                     return searchA
-                #else:
                     #energia e listatotal devem permanecer os mesmos,
                     # pegando os valores que possuiam antes do loop,
                     # em cada loop, eh como se fossem um backup para ir atras nas listas mesmo
