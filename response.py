@@ -91,7 +91,10 @@ def percorrer_array(questionArray, energia):
         pos = 0
         #newSearch = search(palavraInicial, palavraFinal, listaProibida, energia, listaResposta, matrix, dic, pos)
         #newSearch = search_a(energia, listatotal, palavraInicial, palavraFinal, matrix, dic)
-        newSearch = search_b(listatotal, palavraInicial, palavraFinal, matrix, dic, 0.9)
+        #O ultimo campo do searchB é a energia que o bot tem para realizar a ligação entre duas palavras
+        #(1 o bot vai só repetir o que foi dito)
+        #(0 o bot não vai dizer nada)
+        newSearch = search_b(listatotal, palavraInicial, palavraFinal, matrix, dic, 0.7)
         print("search rodada ", num, "palavra Inicial: ", palavraInicial, "\npalavra Final: ", palavraFinal)
         print(newSearch)
         responseArrayFinal.append(newSearch)
