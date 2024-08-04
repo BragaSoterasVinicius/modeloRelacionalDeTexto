@@ -224,6 +224,7 @@ def user_message_to_matrix(message, matrix, dic):
         print(dic[n])
 
     #saveCoisas
+    print("dic e matrix sendo salvas...")
     saveDic(dic)
     saveMatrix(matrix)
 
@@ -285,7 +286,7 @@ def old_matrix_dic():
    
         
 if __name__ == "__main__":
-    ch = int(input('''Aperte....\n > 1 para carregar matrix. \n > 2 para criar nova matrix do zero.\n'''))
+    ch = int(input("Aperte....\n > 1 para carregar matrix. \n > 2 para criar nova matrix do zero.\n"))
     #adicionar código para selecionar matrix disponíveis na pasta
     if ch == 1:
         old_matrix_dic()
@@ -295,4 +296,4 @@ if __name__ == "__main__":
             new_matrix_dic(str(input('Insira um novo nome para a matrix...')))
         else:
             exit()
-            
+        
