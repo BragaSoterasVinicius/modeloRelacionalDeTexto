@@ -197,15 +197,19 @@ def setup(matrix, dic, n):
         add_coluna(matrix, n)
         
 #response do bot
-def bot_response(inp, algoritmo):
+def bot_response(inp, algoritmo, energiaCognitiva):
     import response as r
-    response = r.init_answer(inp, algoritmo)
+    response = r.init_answer(inp, algoritmo, energiaCognitiva)
     return response
 
 #função principal de user -> dict
-def user_message_to_matrix(message, matrix, dic, retornar, algoritmo):
+def user_message_to_matrix(message, matrix, dic, retornar, algoritmo, energiaCognitiva):
     messageArray = split_mensagem(message)
+    if (str(messageArray[0]) == "$/set"):
+        energiaCognitiva = float(messageArray[1])
+        return inpt(matrix, dic, retornar, algoritmo, energiaCognitiva)
     uniquePalavras = palavras_unicas_por_mensagem(messageArray)
+        
     for m in uniquePalavras:
         setup(matrix, dic, m)
     print(uniquePalavras)
@@ -227,19 +231,19 @@ def user_message_to_matrix(message, matrix, dic, retornar, algoritmo):
     print("dic e matrix sendo salvas...")
     saveDic(dic)
     saveMatrix(matrix)
-
+    
     if(retornar):
-        print(bot_response(message, algoritmo))
+        print(bot_response(message, algoritmo, energiaCognitiva))
     
 #interface de usuário 
-def inpt(matrix, dic, responder, algoritmo):
+def inpt(matrix, dic, responder, algoritmo, energiaCognitiva = 0.7):
     message = str(input("\n"))
     if message == "quit":
         #saveMatrix(matrix)
         exit()
-    user_message_to_matrix(message, matrix, dic, responder, algoritmo)
+    user_message_to_matrix(message, matrix, dic, responder, algoritmo, energiaCognitiva)
     #retorna para a função de input
-    inpt(matrix, dic, responder, algoritmo)
+    inpt(matrix, dic, responder, algoritmo, energiaCognitiva)
 
 def tela_inicial(matrix, dic):
     if len(matrix)<1:
@@ -263,9 +267,10 @@ def run_study(matrix, dic):
     bookName = str(input("qual o nome do livro?"))+".pdf"
     firstPage = int(input("em qual pagina o robô deve iniciar a leitura?"))
     lastPage  = int(input("Até qual pagina a leitura deve ir?"))
+    energiaCognitiva = float(input("Quanta atenção o bot deve ter ao livro? (de 0 a 1)"))
     bookContent = p.readBook(bookName, firstPage, lastPage)
     for linha in bookContent:
-        user_message_to_matrix(linha, matrix, dic, False, 'b')
+        user_message_to_matrix(linha, matrix, dic, False, 'b', 0.7)
     print("estudo finalizado")
 
 def new_matrix_dic(NewName):

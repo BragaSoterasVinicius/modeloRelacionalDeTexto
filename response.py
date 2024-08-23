@@ -29,12 +29,12 @@ def set_energia():
     #A energia media pertence ao bot como um todo e deve ser resultado da sua base de conhecimentos.
     return 20
 
-def init_answer(question, algoritmo):
+def init_answer(question, algoritmo, energiaCognitiva):
     #Futuramente a energia terá que mudar com base em um valor médio dos conhecimentos
     energia = set_energia()
     #função principal da classe
     questionArray = build_array(question)
-    conjuntoResposta = percorrer_array(questionArray, energia, algoritmo)
+    conjuntoResposta = percorrer_array(questionArray, energia, algoritmo, energiaCognitiva)
 
     #nesse momento conjuntoReposta já deve ter as palavras que vai usar para responder, entre aspas, a pergunta
 
@@ -60,7 +60,7 @@ def organizar_questionArray_por_index(questionArray, dic):
 #vou poder comparar uma palavra com a próxima, não tenho certeza ainda de como vai funcionar, vou usar esse aqui msm.
 
 #segundo metodo mais importante da classe(afirmação subjetiva).  
-def percorrer_array(questionArray, energia, algoritmo):
+def percorrer_array(questionArray, energia, algoritmo, energiaCognitiva):
     #dada uma palavra, ela só vai ter acesso às palavras com index maior que ela
     #então se ela quiser procurar uma palavra que se encaixe nesse caso, o caminho terá
     #que ser feito ao contrário, por enquanto o sistema vai ser esse
@@ -94,7 +94,7 @@ def percorrer_array(questionArray, energia, algoritmo):
         #O ultimo campo do searchB é a energia que o bot tem para realizar a ligação entre duas palavras
         #(1 o bot vai só repetir o que foi dito)
         #(0 o bot não vai dizer nada)
-        limiteCognitivo = 0.7
+        limiteCognitivo = energiaCognitiva
         print("Rodando sistema de resposta com limite cognitivo " + str(limiteCognitivo))
         newSearch = search_selector(listatotal, palavraInicial, palavraFinal, matrix, dic, limiteCognitivo, algoritmo)
         print("search rodada ", num, "palavra Inicial: ", palavraInicial, "\npalavra Final: ", palavraFinal)
