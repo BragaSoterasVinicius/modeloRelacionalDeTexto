@@ -197,13 +197,13 @@ def setup(matrix, dic, n):
         add_coluna(matrix, n)
         
 #response do bot
-def bot_response(inp):
+def bot_response(inp, algoritmo):
     import response as r
-    response = r.init_answer(inp)
+    response = r.init_answer(inp, algoritmo)
     return response
 
 #função principal de user -> dict
-def user_message_to_matrix(message, matrix, dic):
+def user_message_to_matrix(message, matrix, dic, retornar, algoritmo):
     messageArray = split_mensagem(message)
     uniquePalavras = palavras_unicas_por_mensagem(messageArray)
     for m in uniquePalavras:
@@ -228,17 +228,18 @@ def user_message_to_matrix(message, matrix, dic):
     saveDic(dic)
     saveMatrix(matrix)
 
-    print(bot_response(message))
+    if(retornar):
+        print(bot_response(message, algoritmo))
     
 #interface de usuário 
-def inpt(matrix, dic):
+def inpt(matrix, dic, responder, algoritmo):
     message = str(input("\n"))
     if message == "quit":
         #saveMatrix(matrix)
         exit()
-    user_message_to_matrix(message, matrix, dic)
+    user_message_to_matrix(message, matrix, dic, responder, algoritmo)
     #retorna para a função de input
-    inpt(matrix, dic)
+    inpt(matrix, dic, responder, algoritmo)
 
 def tela_inicial(matrix, dic):
     if len(matrix)<1:
@@ -247,8 +248,11 @@ def tela_inicial(matrix, dic):
         print("...Matrix: "+matrix[0].titulo+"...\nVersão 1 da interface do Dict - \nGuia de\nNavegação,\nOrientação e\nSuporte \nExtrapessoal \n\n Sujeito a alterações.")
     choice0 = int(input("Deseja proceder para conversa (1) ou estudo de pdfs(2)?"))
     if choice0 == 1 :
-        inpt(matrix, dic)
-    else:
+        YN = int(input(("Quer que o bot aprenda quieto(0) ou responda algo?(1) \n (Se a matrix for nova, ele será burro como um bebê e repetirá suas palavras)" )))
+        responder = (YN == 1)
+        algoritmo = input(str("Qual algoritmo será usado?"))
+        inpt(matrix, dic, responder, algoritmo)
+    elif choice0 == 2:
         run_study(matrix, dic)
         
 
@@ -261,7 +265,7 @@ def run_study(matrix, dic):
     lastPage  = int(input("Até qual pagina a leitura deve ir?"))
     bookContent = p.readBook(bookName, firstPage, lastPage)
     for linha in bookContent:
-        user_message_to_matrix(linha, matrix, dic)
+        user_message_to_matrix(linha, matrix, dic, False, 'b')
     print("estudo finalizado")
 
 def new_matrix_dic(NewName):
