@@ -27,21 +27,32 @@ def dic_index(dic, word):
 
 def getGasto(colunaRef, palavraRef, matrix, dic):
     somaColuna = sum(colunaRef.corpo)
-    valorDePalavraEmColuna = colunaRef.corpo[dic_index(dic, palavraRef) - dic_index(dic, colunaRef.titulo)-1]
+    indexDaPalavraNaColunaRef = dic_index(dic, palavraRef) - dic_index(dic, colunaRef.titulo)-1
+    if indexDaPalavraNaColunaRef > len(colunaRef.corpo)-1:
+        valorDePalavraEmColuna = 0
+    else:
+        valorDePalavraEmColuna = colunaRef.corpo[indexDaPalavraNaColunaRef]
     gasto = 1 - (valorDePalavraEmColuna/somaColuna)
     return gasto
 
 def hear_a(palavraInicial, palavraFinal, matrix, dic):
     return None
+
 def makeUsableLista(colunaPalavraInicial, limiteCognitivo, matrix, dic):
     listaDeSubPalavrasUsaveis = []
-    for n in range(len(colunaPalavraInicial.corpo)):
-        n +=1
-        palavra =  dic[dic_index(dic, colunaPalavraInicial.titulo)+n-1]
+    print("Calculando palavras relacionadas...")
+    for n in range(1, len(colunaPalavraInicial.corpo)+1):
+        palavra =  dic[dic_index(dic, colunaPalavraInicial.titulo)+n]
         print("Index - "+ str(n)+": Gasto enérgico da palavra "+str(palavra)+" na coluna "+ str(colunaPalavraInicial.titulo) + "..." + str(getGasto(colunaPalavraInicial, palavra, matrix, dic)))
         if getGasto(colunaPalavraInicial, palavra, matrix, dic) < limiteCognitivo:
             listaDeSubPalavrasUsaveis.append(palavra)
     return listaDeSubPalavrasUsaveis
+
+def show_gasto_energetico(colunaPalavraInicial, matrix, dic):
+    for n in range(len(colunaPalavraInicial.corpo)):
+        n +=1
+        palavra =  dic[dic_index(dic, colunaPalavraInicial.titulo)+n-1]
+        print("Index - "+ str(n)+": Gasto enérgico da palavra "+str(palavra)+" na coluna "+ str(colunaPalavraInicial.titulo) + "..." + str(getGasto(colunaPalavraInicial, palavra, matrix, dic)))
 
 def conversa_em_par(listaTotal, palavraInicial, palavraFinal, matrix, dic, limiteCognitivo):
     listaTotal.append(palavraInicial)
@@ -59,6 +70,7 @@ def conversa_em_par(listaTotal, palavraInicial, palavraFinal, matrix, dic, limit
             if conversaAprofundada != None:
                 return conversaAprofundada
     else:
+        show_gasto_energetico(colunaRelevante, matrix, dic)
         listaTotal.append(palavraFinal)
         print(listaTotal)
         return listaTotal

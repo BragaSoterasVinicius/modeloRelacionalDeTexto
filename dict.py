@@ -195,7 +195,15 @@ def setup(matrix, dic, n):
     if verify_coluna_existe(matrix, n) == False:
         print("nova coluna sendo adicionada! " + n)
         add_coluna(matrix, n)
-        
+
+def show_dic(dic = loadDic()):
+    for n in dic:
+        print(str(dic_index(dic, n))+"..."+  n)
+
+def show_matrix(matrix = loadMatrix()):
+    for n in matrix:
+        print(n.titulo + "..." + str(n.corpo))
+    
 #response do bot
 def bot_response(inp, algoritmo, energiaCognitiva):
     import response as r
@@ -203,47 +211,52 @@ def bot_response(inp, algoritmo, energiaCognitiva):
     return response
 
 #função principal de user -> dict
-def user_message_to_matrix(message, matrix, dic, retornar, algoritmo, energiaCognitiva):
+def user_message_to_matrix(message, matrix, dic, retornar, algoritmo, energiaCognitiva, salvarNaMatrix):
     messageArray = split_mensagem(message)
+    
+    if (str(messageArray[0]) == "$/setSaveMatrix"):
+        salvarNaMatrix = (messageArray[1] == 'True')
+        return inpt(matrix, dic, retornar, algoritmo, energiaCognitiva, salvarNaMatrix)
     if (str(messageArray[0]) == "$/set"):
         energiaCognitiva = float(messageArray[1])
-        return inpt(matrix, dic, retornar, algoritmo, energiaCognitiva)
+        return inpt(matrix, dic, retornar, algoritmo, energiaCognitiva, salvarNaMatrix)
     uniquePalavras = palavras_unicas_por_mensagem(messageArray)
+
+    if(salvarNaMatrix):
+        for m in uniquePalavras:
+            setup(matrix, dic, m)
+        print(uniquePalavras)
+        print("bora bill")
         
-    for m in uniquePalavras:
-        setup(matrix, dic, m)
-    print(uniquePalavras)
-    print("bora bill")
-    
-    for n in uniquePalavras:
-        print("HORA DO "+ n)
-        update_value_frequencia_coluna(matrix, dic, messageArray, n)
+        for n in uniquePalavras:
+            print("HORA DO "+ n)
+            update_value_frequencia_coluna(matrix, dic, messageArray, n)
 
-    print("matrix...")
-    for n in range(len(matrix)):
-        print(matrix[n].titulo+"..."+str(matrix[n].corpo))
+        print("matrix...")
+        for n in range(len(matrix)):
+            print(matrix[n].titulo+"..."+str(matrix[n].corpo))
 
-    print("dic...")
-    for n in range(len(dic)):
-        print(dic[n])
+        print("dic...")
+        for n in range(len(dic)):
+            print(dic[n])
 
-    #saveCoisas
-    print("dic e matrix sendo salvas...")
-    saveDic(dic)
-    saveMatrix(matrix)
-    
+        #saveCoisas
+        print("dic e matrix sendo salvas...")
+        saveDic(dic)
+        saveMatrix(matrix)
+        
     if(retornar):
         print(bot_response(message, algoritmo, energiaCognitiva))
     
 #interface de usuário 
-def inpt(matrix, dic, responder, algoritmo, energiaCognitiva = 0.7):
+def inpt(matrix, dic, responder, algoritmo, energiaCognitiva = 0.7, salvarNaMatrix = True):
     message = str(input("\n"))
     if message == "quit":
         #saveMatrix(matrix)
         exit()
-    user_message_to_matrix(message, matrix, dic, responder, algoritmo, energiaCognitiva)
+    user_message_to_matrix(message, matrix, dic, responder, algoritmo, energiaCognitiva, salvarNaMatrix)
     #retorna para a função de input
-    inpt(matrix, dic, responder, algoritmo, energiaCognitiva)
+    inpt(matrix, dic, responder, algoritmo, energiaCognitiva, salvarNaMatrix)
 
 def tela_inicial(matrix, dic):
     if len(matrix)<1:
@@ -299,10 +312,11 @@ if __name__ == "__main__":
     #adicionar código para selecionar matrix disponíveis na pasta
     if ch == 1:
         old_matrix_dic()
-    else:
+    elif ch == 2:
         yn = str(input("Deseja iniciar uma nova matrix? (S/N)\n(estará apagando a antiga...)"))
         if yn.lower() == 's':
             new_matrix_dic(str(input('Insira um novo nome para a matrix...')))
         else:
             exit()
-        
+    elif ch == 0:
+        print("opções de debug \n")
