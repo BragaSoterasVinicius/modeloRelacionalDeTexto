@@ -7,11 +7,12 @@ def readBook(bookName, primeiraPagina, ultimaPagina):
 
     book = open(bookPath, "rb")
     pdf_reader = p.PdfReader(book)
-    bookSize = pdf_reader.get_num_pages()
-
+    bookSection = []
+    
     for paginaNumero in range(primeiraPagina, ultimaPagina):
         page = pdf_reader.get_page(paginaNumero)
-    output = page.extract_text()
-    groups = output.split('\n')
-    print(groups)
-    return groups
+        output = page.extract_text()
+        groups = output.split('\n')
+        print(groups)
+        bookSection = bookSection + groups
+    return bookSection
