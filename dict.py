@@ -211,7 +211,7 @@ def bot_response(inp, algoritmo, energiaCognitiva):
     return response
 
 #função principal de user -> dict
-def user_message_to_matrix(message, matrix, dic, retornar, algoritmo, energiaCognitiva, salvarNaMatrix):
+def user_message_to_matrix(message, matrix, dic, retornar, algoritmo, energiaCognitiva, salvarNaMatrix, disco = False):
     messageArray = split_mensagem(message)
     
     if (str(messageArray[0]) == "$/setSaveMatrix"):
@@ -246,7 +246,9 @@ def user_message_to_matrix(message, matrix, dic, retornar, algoritmo, energiaCog
         print("dic e matrix sendo salvas...")
         saveDic(dic)
         saveMatrix(matrix)
-        
+
+    if(disco):
+        return bot_response(message, algoritmo, energiaCognitiva)    
     if(retornar):
         print(bot_response(message, algoritmo, energiaCognitiva))
     
