@@ -43,9 +43,9 @@ class coluna:
                 self.corpo.append(0)
                 print(self.corpo)
                 print(len(self.corpo)-1)
-            print("deveria ter ido ate", pos)
+            print("deve ter ido ate", pos)
             print(value)
-            self.corpo.append(value)
+            self.corpo[pos]= value
         else:
             print(self.corpo[pos])
             self.corpo[pos] = value
@@ -54,7 +54,7 @@ class coluna:
         print(len(self.corpo)-1)
         print(pos)
         if len(self.corpo)-1 < pos:
-            print("rpgasd")
+            print("coluna sem linha, adicionando 0.")
             self.setCorpo(pos, 0)
         return self.corpo[pos]
         
@@ -220,6 +220,8 @@ def user_message_to_matrix(message, matrix, dic, retornar, algoritmo, energiaCog
     if (str(messageArray[0]) == "$/set"):
         energiaCognitiva = float(messageArray[1])
         return inpt(matrix, dic, retornar, algoritmo, energiaCognitiva, salvarNaMatrix)
+    if (str(messageArray[0]) == "$/return"):
+        return tela_inicial(matrix, dic)
     uniquePalavras = palavras_unicas_por_mensagem(messageArray)
 
     if(salvarNaMatrix):
