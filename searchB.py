@@ -27,11 +27,18 @@ def dic_index(dic, word):
 
 def getGasto(colunaRef, palavraRef, matrix, dic):
     somaColuna = sum(colunaRef.corpo)
+    if dic_index(dic, palavraRef) < dic_index(dic, colunaRef.titulo):
+        bkp = colunaRef.titulo
+        colunaRef = matrix[dic_index(dic, palavraRef)]
+        palavraRef = bkp
     indexDaPalavraNaColunaRef = dic_index(dic, palavraRef) - dic_index(dic, colunaRef.titulo)-1
+    #Tenho que fazer algum sistema para inverter as coordenadas de uma coluna vazia para sua linha equivalente.
     if indexDaPalavraNaColunaRef > len(colunaRef.corpo)-1:
         valorDePalavraEmColuna = 0
     else:
         valorDePalavraEmColuna = colunaRef.corpo[indexDaPalavraNaColunaRef]
+    if somaColuna == 0: 
+        somaColuna = 1
     gasto = 1 - (valorDePalavraEmColuna/somaColuna)
     return gasto
 

@@ -284,8 +284,12 @@ def run_study(matrix, dic):
     lastPage  = int(input("Até qual pagina a leitura deve ir?"))
     energiaCognitiva = float(input("Quanta atenção o bot deve ter ao livro? (de 0 a 1)"))
     bookContent = p.readBook(bookName, firstPage, lastPage)
+    n = 0
     for linha in bookContent:
-        user_message_to_matrix(linha, matrix, dic, False, 'b', 0.7)
+        n = n+ 1
+        print("linha" + str(n))
+        print(linha)
+        user_message_to_matrix(linha, matrix, dic, False, 'b', 0.7, True)
     print("estudo finalizado")
 
 def new_matrix_dic(NewName):
