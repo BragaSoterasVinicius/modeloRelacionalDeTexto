@@ -256,6 +256,13 @@ def inpt(matrix, dic, responder, algoritmo, energiaCognitiva = 0.7, salvarNaMatr
     if message == "quit":
         #saveMatrix(matrix)
         exit()
+    if message == "$$/stresstest":
+        for n in range(600):
+            user_message_to_matrix(str(n),matrix,dic, False, algoritmo, energiaCognitiva, True)
+        print("Finalizado")
+        print(len(dic))
+        print(len(matrix))
+        quit()
     user_message_to_matrix(message, matrix, dic, responder, algoritmo, energiaCognitiva, salvarNaMatrix)
     #retorna para a função de input
     inpt(matrix, dic, responder, algoritmo, energiaCognitiva, salvarNaMatrix)
