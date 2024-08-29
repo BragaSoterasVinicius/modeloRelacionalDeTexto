@@ -246,7 +246,13 @@ def user_message_to_matrix(message, matrix, dic, retornar, algoritmo, energiaCog
         print("dic e matrix sendo salvas...")
         saveDic(dic)
         saveMatrix(matrix)
-        
+    else:
+        messageArrayS = [] + messageArray
+        for m in messageArray:
+            if is_word_in_dic(dic, m) == False:
+                messageArrayS.remove(m)
+        message = " ".join(messageArrayS)
+            
     if(retornar):
         print(bot_response(message, algoritmo, energiaCognitiva))
     
