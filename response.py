@@ -29,12 +29,12 @@ def set_energia():
     #A energia media pertence ao bot como um todo e deve ser resultado da sua base de conhecimentos.
     return 20
 
-def init_answer(question, algoritmo, energiaCognitiva):
+def init_answer(matrixName, question, algoritmo, energiaCognitiva):
     #Futuramente a energia terá que mudar com base em um valor médio dos conhecimentos
     energia = set_energia()
     #função principal da classe
     questionArray = build_array(question)
-    conjuntoResposta = percorrer_array(questionArray, energia, algoritmo, energiaCognitiva)
+    conjuntoResposta = percorrer_array(matrixName,questionArray, energia, algoritmo, energiaCognitiva)
 
     #nesse momento conjuntoReposta já deve ter as palavras que vai usar para responder, entre aspas, a pergunta
 
@@ -60,13 +60,13 @@ def organizar_questionArray_por_index(questionArray, dic):
 #vou poder comparar uma palavra com a próxima, não tenho certeza ainda de como vai funcionar, vou usar esse aqui msm.
 
 #segundo metodo mais importante da classe(afirmação subjetiva).  
-def percorrer_array(questionArray, energia, algoritmo, energiaCognitiva):
+def percorrer_array(matrixName,questionArray, energia, algoritmo, energiaCognitiva):
     #dada uma palavra, ela só vai ter acesso às palavras com index maior que ela
     #então se ela quiser procurar uma palavra que se encaixe nesse caso, o caminho terá
     #que ser feito ao contrário, por enquanto o sistema vai ser esse
     #só imagino que isso só vai mudar caso a ordem das palavras comece a importar no futuro
-    matrix = loadMatrix()
-    dic = loadDic()
+    matrix = loadMatrix(matrixName)
+    dic = loadDic(matrixName)
     questionArrayByIndex = organizar_questionArray_por_index(questionArray, dic)
     #pegar primeira palavra, encontrar as outras duas, e tentar encontrar as próximas
     #sem perder toda a energia. já que estou começando com o menor index, com certeza os
@@ -96,7 +96,7 @@ def percorrer_array(questionArray, energia, algoritmo, energiaCognitiva):
         #(0 o bot não vai dizer nada)
         limiteCognitivo = energiaCognitiva
         print("Rodando sistema de resposta com limite cognitivo " + str(limiteCognitivo))
-        newSearch = search_selector(listatotal, palavraInicial, palavraFinal, matrix, dic, limiteCognitivo, algoritmo)
+        newSearch = search_selector(matrixName, listatotal, palavraInicial, palavraFinal, matrix, dic, limiteCognitivo, algoritmo)
         print("search rodada ", num, "palavra Inicial: ", palavraInicial, "\npalavra Final: ", palavraFinal)
         print(newSearch)
         responseArrayFinal.append(newSearch)
@@ -109,11 +109,11 @@ def percorrer_array(questionArray, energia, algoritmo, energiaCognitiva):
     print(search_build_string(responseArrayFinal))
     return search_build_string(responseArrayFinal)
    
-def search_selector(listatotal, palavraInicial, palavraFinal, matrix, dic, limiteCognitivo, algoritmo):
+def search_selector(matrixName, listatotal, palavraInicial, palavraFinal, matrix, dic, limiteCognitivo, algoritmo):
     if algoritmo == 'b':
-        return search_b(listatotal, palavraInicial, palavraFinal, matrix, dic, limiteCognitivo)
+        return search_b(matrixName, listatotal, palavraInicial, palavraFinal, matrix, dic, limiteCognitivo)
     elif algoritmo == 'a':
-        return search_a(20, listatotal, palavraInicial, palavraFinal, matrix, dic)
+        return search_a(matrixName, 20, listatotal, palavraInicial, palavraFinal, matrix, dic)
 #getPeso
 def getPeso(matrix, palavraInicialIndex, palavraFinalIndex):
     peso = matrix[palavraInicialIndex].getCorpo(palavraFinalIndex-len(matrix)+1)
@@ -195,9 +195,9 @@ def energiaDin(energia):
     energiaDin = energia / set_energia()
     return energiaDin
 
-def search_b(listaTotal, palavraInicial, palavraFinal, matrix, dic, limite_cognitivo):
+def search_b(matrixName, listaTotal, palavraInicial, palavraFinal, matrix, dic, limite_cognitivo):
     import searchB
-    return searchB.conversa_em_par(listaTotal, palavraInicial, palavraFinal, matrix, dic, limite_cognitivo)
+    return searchB.conversa_em_par(matrixName, listaTotal, palavraInicial, palavraFinal, matrix, dic, limite_cognitivo)
 
 #Todo o metodo devera ser refeito, levando em consideracao que nao posso mais assumir que o a seja menor no dic que o b, devido a capacidade de exploracao
 def search_a(energia, listatotal, a, b, matrix, dic):
@@ -287,28 +287,27 @@ def dic_index(dic, word):
 
 #load e save
 import pickle as p
-def saveMatrix(matrix):
-    print("saveMatrix")
-    with open('matrix.pkl', 'wb') as outp:
+def saveMatrix(matrix, name="backup_matrix"):
+    print("saveMatrix" + name)
+    with open("matrixLib/"+name+'.pkl', 'wb') as outp:
         p.dump(matrix, outp, p.HIGHEST_PROTOCOL)
         
-def saveDic(dic):
-    print("saveDic")
-    with open('dic.pkl', 'wb') as outp:
+def saveDic(dic, name="backup_matrix"):
+    print("saveDic" + name)
+    with open('dicLib/'+name+'.pkl', 'wb') as outp:
         p.dump(dic, outp, p.HIGHEST_PROTOCOL)
         
-def loadMatrix():
+def loadMatrix(matrixname = "matrix"):
     print("loadMatrix")
-    with open('matrix.pkl', 'rb') as m:
+    with open('matrixLib/'+matrixname+".pkl", 'rb') as m:
         matrix = p.load(m)
         return matrix
 
-def loadDic():
+def loadDic(matrixname = "matrix"):
     print("loadDic")
-    with open('dic.pkl', 'rb') as m:
+    with open('dicLib/'+matrixname+'.pkl', 'rb') as m:
         dic = p.load(m)
         return dic
-    
 #debug response
 
 def debug():

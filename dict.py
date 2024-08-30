@@ -136,25 +136,25 @@ def build_new_palavra(value, matrix, dic):
 #save and load
 #puxar dicionário junto
 import pickle as p
-def saveMatrix(matrix):
-    print("saveMatrix")
-    with open('matrix.pkl', 'wb') as outp:
+def saveMatrix(matrix, name="backup_matrix"):
+    print("saveMatrix" + name)
+    with open("matrixLib/"+name+'.pkl', 'wb') as outp:
         p.dump(matrix, outp, p.HIGHEST_PROTOCOL)
         
-def saveDic(dic):
-    print("saveDic")
-    with open('dic.pkl', 'wb') as outp:
+def saveDic(dic, name="backup_matrix"):
+    print("saveDic" + name)
+    with open('dicLib/'+name+'.pkl', 'wb') as outp:
         p.dump(dic, outp, p.HIGHEST_PROTOCOL)
         
-def loadMatrix():
+def loadMatrix(matrixname = "matrix"):
     print("loadMatrix")
-    with open('matrix.pkl', 'rb') as m:
+    with open('matrixLib/'+matrixname+".pkl", 'rb') as m:
         matrix = p.load(m)
         return matrix
 
-def loadDic():
+def loadDic(matrixname = "matrix"):
     print("loadDic")
-    with open('dic.pkl', 'rb') as m:
+    with open('dicLib/'+matrixname+'.pkl', 'rb') as m:
         dic = p.load(m)
         return dic
     
@@ -196,32 +196,34 @@ def setup(matrix, dic, n):
         print("nova coluna sendo adicionada! " + n)
         add_coluna(matrix, n)
 
-def show_dic(dic = loadDic()):
+def show_dic(matrixname = 'matrixbackup'):
+    dic = loadDic(matrixname)
     for n in dic:
         print(str(dic_index(dic, n))+"..."+  n)
 
-def show_matrix(matrix = loadMatrix()):
+def show_matrix(matrixname = 'matrixbackup'):
+    matrix = loadMatrix(matrixname)
     for n in matrix:
         print(n.titulo + "..." + str(n.corpo))
     
 #response do bot
-def bot_response(inp, algoritmo, energiaCognitiva):
+def bot_response(matrixName, inp, algoritmo, energiaCognitiva):
     import response as r
-    response = r.init_answer(inp, algoritmo, energiaCognitiva)
+    response = r.init_answer(matrixName, inp, algoritmo, energiaCognitiva)
     return response
 
 #função principal de user -> dict
-def user_message_to_matrix(message, matrix, dic, retornar, algoritmo, energiaCognitiva, salvarNaMatrix):
+def user_message_to_matrix(matrixName, message, matrix, dic, retornar, algoritmo, energiaCognitiva, salvarNaMatrix):
     messageArray = split_mensagem(message)
     
     if (str(messageArray[0]) == "$/setSaveMatrix"):
         salvarNaMatrix = (messageArray[1] == 'True')
-        return inpt(matrix, dic, retornar, algoritmo, energiaCognitiva, salvarNaMatrix)
+        return inpt(matrixName, matrix, dic, retornar, algoritmo, energiaCognitiva, salvarNaMatrix)
     if (str(messageArray[0]) == "$/set"):
         energiaCognitiva = float(messageArray[1])
-        return inpt(matrix, dic, retornar, algoritmo, energiaCognitiva, salvarNaMatrix)
+        return inpt(matrixName, matrix, dic, retornar, algoritmo, energiaCognitiva, salvarNaMatrix)
     if (str(messageArray[0]) == "$/return"):
-        return tela_inicial(matrix, dic)
+        return tela_inicial(matrixName, matrix, dic)
     uniquePalavras = palavras_unicas_por_mensagem(messageArray)
 
     if(salvarNaMatrix):
@@ -244,8 +246,8 @@ def user_message_to_matrix(message, matrix, dic, retornar, algoritmo, energiaCog
 
         #saveCoisas
         print("dic e matrix sendo salvas...")
-        saveDic(dic)
-        saveMatrix(matrix)
+        saveDic(dic, matrixName)
+        saveMatrix(matrix, matrixName)
     else:
         messageArrayS = [] + messageArray
         for m in messageArray:
@@ -254,26 +256,26 @@ def user_message_to_matrix(message, matrix, dic, retornar, algoritmo, energiaCog
         message = " ".join(messageArrayS)
             
     if(retornar):
-        print(bot_response(message, algoritmo, energiaCognitiva))
+        print(bot_response(matrixName, message, algoritmo, energiaCognitiva))
     
 #interface de usuário 
-def inpt(matrix, dic, responder, algoritmo, energiaCognitiva = 0.7, salvarNaMatrix = True):
+def inpt(matrixName, matrix, dic, responder, algoritmo, energiaCognitiva = 0.7, salvarNaMatrix = True):
     message = str(input("\n"))
     if message == "quit":
         #saveMatrix(matrix)
         exit()
     if message == "$$/stresstest":
         for n in range(600):
-            user_message_to_matrix(str(n),matrix,dic, False, algoritmo, energiaCognitiva, True)
+            user_message_to_matrix(matrixName, str(n),matrix,dic, False, algoritmo, energiaCognitiva, True)
         print("Finalizado")
         print(len(dic))
         print(len(matrix))
         quit()
-    user_message_to_matrix(message, matrix, dic, responder, algoritmo, energiaCognitiva, salvarNaMatrix)
+    user_message_to_matrix(matrixName, message, matrix, dic, responder, algoritmo, energiaCognitiva, salvarNaMatrix)
     #retorna para a função de input
-    inpt(matrix, dic, responder, algoritmo, energiaCognitiva, salvarNaMatrix)
+    inpt(matrixName, matrix, dic, responder, algoritmo, energiaCognitiva, salvarNaMatrix)
 
-def tela_inicial(matrix, dic):
+def tela_inicial(matrixName, matrix, dic):
     if len(matrix)<1:
         print("...Matrix: Sem titulo...\nVersão 1 da interface do Dict - \nGuia de\nNavegação,\nOrientação e\nSuporte \nExtrapessoal \n\n Sujeito a alterações.")
     else:
@@ -283,13 +285,13 @@ def tela_inicial(matrix, dic):
         YN = int(input(("Quer que o bot aprenda quieto(0) ou responda algo?(1) \n (Se a matrix for nova, ele será burro como um bebê e repetirá suas palavras)" )))
         responder = (YN == 1)
         algoritmo = input(str("Qual algoritmo será usado?"))
-        inpt(matrix, dic, responder, algoritmo)
+        inpt(matrixName, matrix, dic, responder, algoritmo)
     elif choice0 == 2:
-        run_study(matrix, dic)
+        run_study(matrixName, matrix, dic)
         
 
 #função de estudo de pdfs:
-def run_study(matrix, dic):
+def run_study(matrixName, matrix, dic):
     import livros.pdfReader as p
     #Adicionar meio para que possa ler quais livros estão dentro da sua pasta e só selecionar por um index
     bookName = str(input("qual o nome do livro?"))+".pdf"
@@ -302,37 +304,39 @@ def run_study(matrix, dic):
         n = n+ 1
         print("linha" + str(n))
         print(linha)
-        user_message_to_matrix(linha, matrix, dic, False, 'b', 0.7, True)
+        user_message_to_matrix(matrixName, linha, matrix, dic, False, 'b', 0.7, True)
     print("estudo finalizado")
 
 def new_matrix_dic(NewName):
     #adicionar código para nomear sua própria matrix
     matrix = []
     dic = []
-    saveMatrix(matrix)
-    saveDic(dic)
-    tela_inicial(matrix, dic)
+    saveMatrix(matrix, NewName)
+    saveDic(dic, NewName)
+    tela_inicial(NewName, matrix, dic)
         
-def old_matrix_dic():
+def old_matrix_dic(matrixname):
     try:
-        matrix = loadMatrix()
-        dic = loadDic()
+        matrix = loadMatrix(matrixname)
+        dic = loadDic(matrixname)
         alreadySaved = True
     except:
         alreadySaved = False
         print("erro no carregamento da matrix. - old_matrix_dic()")
         new_matrix_dic(str(input('Insira um novo nome para a matrix...')))
     if alreadySaved:
-        tela_inicial(matrix, dic)
+        tela_inicial(matrixname, matrix, dic)
    
-        
+import os
 if __name__ == "__main__":
     ch = int(input("Aperte....\n > 1 para carregar matrix. \n > 2 para criar nova matrix do zero.\n"))
     #adicionar código para selecionar matrix disponíveis na pasta
     if ch == 1:
-        old_matrix_dic()
+        print("matrizes disponiveis... \n")
+        [print(str(i)[0:-4]) for i in os.listdir('matrixLib')]
+        old_matrix_dic(str(input("Insira a matrix escolhida...\n")))
     elif ch == 2:
-        yn = str(input("Deseja iniciar uma nova matrix? (S/N)\n(estará apagando a antiga...)"))
+        yn = str(input("Deseja iniciar uma nova matrix? (S/N)"))
         if yn.lower() == 's':
             new_matrix_dic(str(input('Insira um novo nome para a matrix...')))
         else:
