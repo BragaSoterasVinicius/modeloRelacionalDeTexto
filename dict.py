@@ -205,7 +205,19 @@ def show_matrix(matrixname = 'matrixbackup'):
     matrix = loadMatrix(matrixname)
     for n in matrix:
         print(n.titulo + "..." + str(n.corpo))
-    
+
+def gastoMedio(matrixname):
+    soma = 0
+    quantidade = 0
+    matrix = loadMatrix(matrixname)
+    for n in matrix:
+        for m in n.corpo:
+            if m !=1 and m !=0:
+                quantidade = quantidade + 1
+                soma = soma + m
+                print(quantidade)
+                print(soma)
+    print(soma/quantidade)
 #response do bot
 def bot_response(matrixName, inp, algoritmo, energiaCognitiva):
     import response as r
@@ -213,7 +225,7 @@ def bot_response(matrixName, inp, algoritmo, energiaCognitiva):
     return response
 
 #função principal de user -> dict
-def user_message_to_matrix(matrixName, message, matrix, dic, retornar, algoritmo, energiaCognitiva, salvarNaMatrix):
+def user_message_to_matrix(matrixName, message, matrix, dic, retornar, algoritmo, energiaCognitiva, salvarNaMatrix, disco = False):
     messageArray = split_mensagem(message)
     
     if (str(messageArray[0]) == "$/setSaveMatrix"):
@@ -254,7 +266,9 @@ def user_message_to_matrix(matrixName, message, matrix, dic, retornar, algoritmo
             if is_word_in_dic(dic, m) == False:
                 messageArrayS.remove(m)
         message = " ".join(messageArrayS)
-            
+    
+    if(disco):
+        return bot_response(matrixName, message, algoritmo, energiaCognitiva)
     if(retornar):
         print(bot_response(matrixName, message, algoritmo, energiaCognitiva))
     

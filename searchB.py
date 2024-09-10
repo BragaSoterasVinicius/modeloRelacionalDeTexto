@@ -62,6 +62,8 @@ def show_gasto_energetico(colunaPalavraInicial, matrix, dic):
         print("Index - "+ str(n)+": Gasto enérgico da palavra "+str(palavra)+" na coluna "+ str(colunaPalavraInicial.titulo) + "..." + str(getGasto(colunaPalavraInicial, palavra, matrix, dic)))
 
 def conversa_em_par(matrixName, listaTotal, palavraInicial, palavraFinal, matrix, dic, limiteCognitivo, cansaco = 10):
+    if cansaco == 1:
+                return listaTotal
     listaTotal.append(palavraInicial)
     colunaRelevante = matrix[dic_index(dic, palavraInicial)]
     print("Gasto energético = " + str(getGasto(colunaRelevante, palavraFinal, matrix, dic)))
@@ -71,7 +73,9 @@ def conversa_em_par(matrixName, listaTotal, palavraInicial, palavraFinal, matrix
         for eachMiddlePalavra in listaDeSubPrimarios:
             subListaTotal = []
             subListaTotal = subListaTotal + listaTotal
-            conversaAprofundada = conversa_em_par(matrixName, subListaTotal, eachMiddlePalavra, palavraFinal, matrix, dic, limiteCognitivo)
+            cansaco= cansaco-1
+            conversaAprofundada = conversa_em_par(matrixName, subListaTotal, eachMiddlePalavra, palavraFinal, matrix, dic, limiteCognitivo, cansaco)
+            
             print("palavra do meio" + eachMiddlePalavra)
             print("subConversaListaTotal" + str(conversaAprofundada))
             if conversaAprofundada != None:
