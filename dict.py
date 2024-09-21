@@ -227,15 +227,6 @@ def bot_response(matrixName, inp, algoritmo, energiaCognitiva):
 #função principal de user -> dict
 def user_message_to_matrix(matrixName, message, matrix, dic, retornar, algoritmo, energiaCognitiva, salvarNaMatrix, disco = False):
     messageArray = split_mensagem(message)
-    
-    if (str(messageArray[0]) == "$/setSaveMatrix"):
-        salvarNaMatrix = (messageArray[1] == 'True')
-        return inpt(matrixName, matrix, dic, retornar, algoritmo, energiaCognitiva, salvarNaMatrix)
-    if (str(messageArray[0]) == "$/set"):
-        energiaCognitiva = float(messageArray[1])
-        return inpt(matrixName, matrix, dic, retornar, algoritmo, energiaCognitiva, salvarNaMatrix)
-    if (str(messageArray[0]) == "$/return"):
-        return tela_inicial(matrixName, matrix, dic)
     uniquePalavras = palavras_unicas_por_mensagem(messageArray)
 
     if(salvarNaMatrix):

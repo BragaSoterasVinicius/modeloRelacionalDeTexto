@@ -38,7 +38,7 @@ async def send_message(message: Message, user_message: str) -> None:
     if not user_message:
         print('Que porra é sessa caraio')
     try: 
-        response: str = d.user_message_to_matrix('sabedoriajaponesa',user_message, d.loadMatrix('sabedoriajaponesa'), d.loadDic('sabedoriajaponesa'), True, 'b', 0.995, False, True)
+        response: str = d.user_message_to_matrix('diadema5',user_message, d.loadMatrix('diadema5'), d.loadDic('diadema5'), True, 'b', 0.995, False, True)
         if response != None:
             await message.channel.send(response)
     except Exception as e:
