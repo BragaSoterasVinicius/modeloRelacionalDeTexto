@@ -1,8 +1,10 @@
 import dict as d
 import json
 from flask import Flask, jsonify, request
-app = Flask(__name__)
+from flask_cors import CORS
 
+app = Flask(__name__)
+CORS(app)
 #Algum dia dou um jeito que não precise ter essa classe em todos os arquivos... 
 class coluna:
     def __init__(self, titulo):
@@ -39,7 +41,7 @@ class coluna:
             self.setCorpo(pos, 0)
         return self.corpo[pos]
 
-@app.route('/speak')
+@app.route('/speak', methods=['POST'])
 def speak():
     record = json.loads(request.data)
 
@@ -54,7 +56,7 @@ def speak():
     response: str = d.user_message_to_matrix(matrixName, user_message, d.loadMatrix(matrixName), d.loadDic(matrixName), shouldReturn,
                                               algoritmo, energiaCognitiva, salvarNaMatrix, returnObject)
     if response !=None:
-        return response
+        return jsonify(response)
     else:
         return "Não sei o que te dizer a respeito disso aí...\n(O bot não retornou nada)"
 
