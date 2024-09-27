@@ -60,4 +60,16 @@ def speak():
     else:
         return "Não sei o que te dizer a respeito disso aí...\n(O bot não retornou nada)"
 
+
+import os
+@app.route('/listmatrixes', methods=['GET'])
+def list_matrixes():
+    arraylista = []
+    [arraylista.append(str(i)[0:-4]) for i in os.listdir('matrixLib')]
+    return jsonify(arraylista)
+
+@app.route('/listalgoritms', methods=['GET'])
+def list_algoritms():
+    lista = ['a', 'b']
+    return jsonify(lista)
 app.run()
