@@ -66,10 +66,10 @@ import os
 def list_matrixes():
     arraylista = []
     [arraylista.append(str(i)[0:-4]) for i in os.listdir('matrixLib')]
-    return jsonify(arraylista)
+    return arraylista
 
 @app.route('/listalgoritms', methods=['GET'])
 def list_algoritms():
     lista = ['a', 'b']
-    return jsonify(lista)
+    return lista
 app.run()
