@@ -114,6 +114,9 @@ def search_selector(matrixName, listatotal, palavraInicial, palavraFinal, matrix
         return search_b(matrixName, listatotal, palavraInicial, palavraFinal, matrix, dic, limiteCognitivo)
     elif algoritmo == 'a':
         return search_a(matrixName, 20, listatotal, palavraInicial, palavraFinal, matrix, dic)
+    elif algoritmo == 'c':
+        return search_c(matrixName)
+        #programar esse diabo
 #getPeso
 def getPeso(matrix, palavraInicialIndex, palavraFinalIndex):
     peso = matrix[palavraInicialIndex].getCorpo(palavraFinalIndex-len(matrix)+1)
